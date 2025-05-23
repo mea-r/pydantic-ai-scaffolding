@@ -1,0 +1,19 @@
+# LLM Provider API Keys
+# Copy this file to .env and fill in your API keys
+
+# OpenAI API
+OPENAI_API_KEY="xx"
+
+# Anthropic API
+ANTHROPIC_API_KEY="xx"
+
+# Mistral API 
+# MISTRAL_API_KEY=
+
+# Google Vertex AI
+GOOGLE_APPLICATION_CREDENTIALS=/Users/trailo/google.json
+GOOGLE_PROJECT_ID=680678599008
+GOOGLE_LOCATION=us-central1  # The region where your Vertex AI resources are located
+GOOGLE_API_KEY = "xx"
+
+OPENROUTER_KEY="xx"
