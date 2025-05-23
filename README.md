@@ -7,7 +7,7 @@ This is a simple ai helper to connect with openrouter, google, openai and openro
 Simply run install.sh and then do source venv/bin/activate
 
 #### LLM TASK 
-Please implement the full functionality. 
+Please implement the full functionality as outlined in this document. Success is determined by the successful completion of all tests and the ability to run the example.py file without errors.
 
 #### Specific implementation considerations
 - When loading PydanticModel with results, in most cases invididual fields that don't validate should be just discarded
