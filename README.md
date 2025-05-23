@@ -1,9 +1,7 @@
 ### Ai Helper
-
-This is a simple ai helper to connect with openrouter, google, openai and openrouter. Input and output is always a pydantic model. 
+This is a simple ai helper to connect with openrouter, google, openai and openrouter. Input and output are always a pydantic model. Supports text, images and files and function calls.
 
 ### Activating the environment
-
 Simply run install.sh and then do source venv/bin/activate
 
 #### LLM TASK 
@@ -25,32 +23,4 @@ Please implement the full functionality as outlined in this document. Success is
 - PATHS should always be coming from the utils, never hard coded.
 - When changing any methods, ALWAYS search for usages elsewhere.
 - To setup the project, run install.sh and then source venv/bin/activate
-
-### Task
-Please do a simple implementation with the following structure:
-
-py_models
-    pd_reader_model.py
-    weather_model.py
-tests
-    test_integrations.py
-    files/
-        inputs/
-        outputs/
-        test.pdf
-        test.png
-
-src/
-    ai_helper.py                --- main class
-    tools.py                    --- two example tools
-    cost_tracker.py             --- each run's costs are saved here
-    adapters/
-        anthropic.py                
-        google.py
-        openai.py
-        openrouter.py
-    
-example.py
-
-
 
