@@ -13,20 +13,18 @@ Please implement the full functionality.
 - When loading PydanticModel with results, in most cases invididual fields that don't validate should be just discarded
 - We should add information about how many percent of the model fields are filled
 
-
 #### Guidelines for implementation
 - No function should be longer than 200 lines.
 - No class should be longer than 700 lines.
 - Feel free to create new files to make things more modular.
-- Configuration should be kept in pyllm_config.json - extend that when needed. No other config files besides provider specific config files. 
+- .env contains credentisals. env-example is provided.
 - ALWAYS write tests before implementing. TDD!
 - ALWAYS stop for approval after creating the tests. 
 - ALWAYS run tests after making changes.
 - ALWAYS rely on providers for getting and modifying the LLM's, Configs, and Pydantic models.
 - PATHS should always be coming from the utils, never hard coded.
-- Use the provided venv information. **Don't install packages or try to modify venv**. Always activate it to run any commands.
 - When changing any methods, ALWAYS search for usages elsewhere.
-
+- To setup the project, run install.sh and then source venv/bin/activate
 
 ### Task
 Please do a simple implementation with the following structure:
@@ -53,4 +51,6 @@ src/
         openrouter.py
     
 example.py
+
+
 
