@@ -1,36 +1,62 @@
-from py_models.pd_reader_model import PDReaderModel
-from py_models.weather_model import WeatherModel
-from src.cost_tracker import CostTracker
-from src.adapters.base_adapter import BaseAdapter
-from src.tools import calculator, weather, pdf_reader # Import specific tools
+from os import getenv
+from typing import Any, Dict, List, Optional, Union, Type, TypeVar, Generic
+from abc import ABC, abstractmethod
+from datetime import datetime
+import uuid
+import os
+from pathlib import Path
+import json
+import mimetypes
 
-class AiHelper:
-    def __init__(self, model_identifier: str, cost_tracker: CostTracker = None):
-        self.model_identifier = model_identifier
-        self.cost_tracker = cost_tracker if cost_tracker is not None else CostTracker()
-        self.available_tools = {}
-        self._initialize_adapter()
+from pydantic_ai import Agent
+from pydantic_ai.providers.google import GoogleProvider
+from pydantic import BaseModel, Field
 
-    def _initialize_adapter(self):
-        # Logic to select and initialize the appropriate adapter based on self.model_identifier
-        # For now, just a placeholder
-        self.adapter: BaseAdapter = None # Replace with actual adapter instance
+from pydantic_ai.models.openai import OpenAIModel
+from pydantic_ai.providers.openai import OpenAIProvider
+from pydantic_ai.models.anthropic import AnthropicModel
+from pydantic_ai.models.google import GoogleModel
+from pydantic_ai.providers.anthropic import AnthropicProvider
+from dotenv import load_dotenv
 
-    def add_tool(self, name: str, description: str, func):
-        self.available_tools[name] = {"description": description, "func": func}
+load_dotenv()
 
-    def ask(self, prompt: str, tools: list = None, pydantic_model=None, file: str = None):
-        # Logic to process the request:
-        # 1. Use the adapter to interact with the LLM.
-        # 2. Potentially use tools based on the 'tools' parameter.
-        # 3. Handle file input if 'file' is provided.
-        # 4. Ensure the output conforms to the specified 'model' if provided.
-        # 5. Track cost using self.cost_tracker.
-        pass
+class LLMBase:
+    """Handles file content and metadata"""
 
-    def _execute_tool(self, tool_name, tool_args):
-        # Logic to execute a specific tool from self.available_tools
-        pass
+    def __init__(self):
+        # load .env
 
-    def _track_cost(self, cost_details):
-        self.cost_tracker.track_cost(cost_details)
+        key_openai = os.getenv('OPEN_AI_KEY')
+        key_anthropic = os.getenv('ANTHROPIC_API_KEY')
+        key_google = os.getenv('GOOGLE_API_KEY')
+        open_router = os.getenv('OPEN_ROUTER_API_KEY')
+
+        print(key_openai)
+        exit()
+
+        self.openai = OpenAIModel('gpt-4o', provider=OpenAIProvider(api_key=key_openai))
+        self.anthropic = AnthropicModel('claude-3-5-sonnet-latest', provider=AnthropicProvider(api_key=key_anthropic))
+        self.google = GoogleModel('gemini-2.5-pro-exp-03-25', provider=GoogleProvider(api_key=key_google))
+        self.open_router = OpenAIModel('gpt-4o', provider=OpenAIProvider(api_key=open_router))
+
+    # this is where abstraction for llm-tester will be put in place
+    def get_result(self, prompt: str, model):
+        agent = Agent(self.anthropic, output_type=model, instrument=True)
+        result = agent.run_sync(prompt)
+        return result
+
+    def test(self):
+        test_text = """I confirm that the NDA has been signed on both sides. My sincere apologies for the delay in following up - over the past few weeks, series of regional public holidays and an unusually high workload disrupted our regular scheduling.
+                    Attached to this email, you'll find a short but I believe comprehensive CV of the developer we would propose for the project. He could bring solid expertise in Odoo development, and has extensive experience in odoo migrations.
+                    Please feel free to reach out if you have any questions.
+                    """
+        prompt = 'Please analyse the sentiment of this text\n Here is the text to analyse:' + test_text
+        result = self.get_result(prompt, Hello_worldModel)
+        print(result)
+
+
+if __name__ == '__main__':
+    base = LLMBase()
+    result = base.test()
+    print(result)
