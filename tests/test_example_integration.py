@@ -1,5 +1,12 @@
+from typing import Tuple, TypeVar
+
 import pytest
 from ai_helper import AiHelper
+from py_models.base import LLMReport
+from py_models.hello_world.model import Hello_worldModel
+from tests.helpers import test_hello_world
+
+T = TypeVar('T', bound='BasePyModel')
 
 models_to_test = [
     ["google", "google/gemini-2.0-flash-lite-001"],  # provider first, model second
@@ -18,22 +25,21 @@ def test_ai_helper_integration(provider, model):
     """
     Integration test for the AiHelper class using various models and providers.
     """
-    base = AiHelper()
 
     # Models expected to fail
     if model == "error":
         with pytest.raises(Exception, match=r"Model name 'error' must be in the format 'provider/model_name'\."):
-            base.test(model_name=model, provider=provider)
+            test_hello_world(model_name=model, provider=provider)
     elif model == "openai/errormodel":
          with pytest.raises(Exception, match=r"status_code: 404, model_name: errormodel"):
-            base.test(model_name=model, provider=provider)
+            test_hello_world(model_name=model, provider=provider)
     elif model == "deepseek/deepseek-prover-v2:free":
          with pytest.raises(Exception, match=r"status_code: 404, model_name: deepseek/deepseek-prover-v2:free"):
-            base.test(model_name=model, provider=provider)
+            test_hello_world(model_name=model, provider=provider)
     else:
         # Models expected to succeed
         try:
-            result, report = base.test(model_name=model, provider=provider)
+            result, report = test_hello_world(model_name=model, provider=provider)
             # Basic assertions to check if the test ran and returned something
             assert result is not None
             assert report is not None

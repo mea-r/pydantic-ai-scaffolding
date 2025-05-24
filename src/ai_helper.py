@@ -18,7 +18,7 @@ from pydantic_ai.providers.openrouter import OpenRouterProvider
 
 from helpers.llm_info_provider import LLMInfoProvider
 from py_models.base import LLMReport
-from py_models.hello_world import Hello_worldModel
+from py_models.hello_world.model import Hello_worldModel
 
 load_dotenv()
 T = TypeVar('T', bound='BasePyModel')
@@ -42,17 +42,16 @@ class AiHelper:
     """
     Do the actual request and generate cost report + cost info + save whatever needs to be saved
     """
-    def get_result(self, prompt: str, pydantic_model, model_name: str = 'deepseek/deepseek-prover-v2:free', file: Optional[Union[str, Path]] = None, provider='open_router') -> Tuple[T, LLMReport] | Tuple[None, None]:
+    def get_result(self, prompt: str, pydantic_model, model_name: str = 'deepseek/deepseek-prover-v2:free', file: Optional[Union[str, Path]] = None, provider='open_router', tools: list = None) -> Tuple[T, LLMReport] | Tuple[None, None]:
 
         if '/' not in model_name:
             raise ValueError(f"Model name '{model_name}' must be in the format 'provider/model_name'.")
 
         llm_provider = self._get_llm_provider(provider, model_name)
-        agent = Agent(llm_provider, output_type=pydantic_model, instrument=True)
+        agent = Agent(llm_provider, output_type=pydantic_model, instrument=True, tools=tools)
         agent_output = agent.run_sync(prompt)
         result = agent_output.output
         return result, self._post_process(agent_output, model_name)
-
 
     """
     Usage data calculation. Save hooks for reporting.
@@ -73,17 +72,6 @@ class AiHelper:
         report.fill_percentage = percentage
         return report
 
-    """
-    Used by simple integration tests
-    """
-    def test(self, model_name: str = 'deepseek/deepseek-prover-v2:free', provider='open_router') -> Tuple[T, LLMReport]:
-        test_text = """I confirm that the NDA has been signed on both sides. My sincere apologies for the delay in following up - over the past few weeks, series of regional public holidays and an unusually high workload disrupted our regular scheduling.
-                    Attached to this email, you'll find a short but I believe comprehensive CV of the developer we would propose for the project. He could bring solid expertise in Odoo development, and has extensive experience in odoo migrations.
-                    Please feel free to reach out if you have any questions.
-                    """
-        prompt = 'Please analyse the sentiment of this text\n Here is the text to analyse:' + test_text
-        return self.get_result(prompt, Hello_worldModel, model_name=model_name, provider=provider)
-
     def _get_llm_provider(self, name: str, model_name: str) -> Any:
         # if not self.info_provider.get_model_info(model_name):
         #     raise ValueError(f"Unknown model: {model_name}")
@@ -91,11 +79,8 @@ class AiHelper:
         # Split model_name to get provider and model
         if name != 'open_router':
             model_name = model_name.split('/',1)[-1]
-        # elif self.info_provider.get_model_info(model_name):
-        #     raise ValueError(f"Unknown model: {model_name}")
-
-        # if ':' in model_name:
-        #     model_name = model_name.split(':',1)[0]
+        elif not self.info_provider.get_model_info(model_name):
+            raise ValueError(f"Unknown model: {model_name}")
 
         """
         Returns the appropriate LLM provider based on the name.

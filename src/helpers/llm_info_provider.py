@@ -79,6 +79,13 @@ class LLMInfoProvider:
 
         return data['data']
 
+    def get_models(self) -> list:
+        """
+        Returns a list of all available models.
+        """
+        models = self._get_models_data()
+        return [model['id'] for model in models]
+
     def get_price_list(self) -> dict:
         models = self._get_models_data()
         price_list = {}
@@ -152,6 +159,8 @@ class LLMInfoProvider:
         # read the model_mappings.json
         path = os.path.dirname(__file__)
         model_mappings_file = path+"/model_mappings.json"
+
+
         if os.path.exists(model_mappings_file):
             with open(model_mappings_file, 'r') as f:
                 model_mappings = json.load(f)

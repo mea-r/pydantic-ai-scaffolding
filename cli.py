@@ -1,10 +1,67 @@
 """
 Testing suite for the AIHelper class.
 """
-from ai_helper import AiHelper
+import argparse
+from pydantic.v1.typing import get_args
 
-base = AiHelper()
-base.info_provider.print_price_list()
+from ai_helper import AiHelper
+from helpers.cli_helper_functions import flag_non_working_models
+from helpers.config_helper import ConfigHelper
+from helpers.llm_info_provider import LLMInfoProvider
+from tests.helpers import test_hello_world, test_weather
+
+# check command line flags
+parser = argparse.ArgumentParser()
+parser.add_argument('--update_non_working', nargs='*', help='Updates non-working models in the config file')
+parser.add_argument('--simple_test', nargs='*', help='Updates non-working models in the config file')
+args = parser.parse_args()
+
+if args.update_non_working is not None:
+    # if the flag is set, we will update the non-working models in the config file
+    print("Updating non-working models in the config file...")
+    flag_non_working_models()
+
+if args.simple_test is not None:
+    ## test case with tool calling
+    result, report = test_weather()
+    print(result.model_dump_json(indent=4))
+    print(report.model_dump_json(indent=4))
+
+
+### most simple test case - fails
+# try:
+#     result, report = test_hello_world(model_name='deepseek/deepseek-prover-v2:free', provider='open_router')
+#     print(result.model_dump_json(indent=4))
+#     print(report.model_dump_json(indent=4))
+# except Exception as e:
+#     # Expected to fail with a 404 error since the model is not available
+#     print(f"Error: {e}")
+#
+# ### most simple test case - runs
+# result, report = test_hello_world(model_name='google/gemini-2.0-flash-lite-001', provider='google')
+# print(result.model_dump_json(indent=4))
+# print(report.model_dump_json(indent=4))
+
+
+### test case with tool calling
+# result, report = test_weather()
+# print(result.model_dump_json(indent=4))
+# print(report.model_dump_json(indent=4))
+
+
+
+# write errors to file
+
+
+
+
+# weather = get_weather('Sofia, Bulgaria')
+# print(weather)
+
+
+
+#base = AiHelper()
+#base.info_provider.print_price_list()
 #result, report = base.test()
 #
 # print(result.model_dump_json(indent=4))

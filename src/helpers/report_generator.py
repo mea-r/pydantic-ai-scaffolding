@@ -22,7 +22,7 @@ from dotenv import load_dotenv
 
 from llm_info_provider import LLMInfoProvider
 from py_models.base import LLMReport
-from py_models.hello_world import Hello_worldModel
+from py_models.hello_world.model import Hello_worldModel
 
 
 """

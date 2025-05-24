@@ -1,28 +1,33 @@
 {
-  "defaults": {
-    "model": "open_router:"
-  },
-
-  "daily_limits": {
-    "per_model": {
-      "Hello_worldModel": 2
+    "defaults": {
+        "model": "open_router:"
     },
-    "per_service": {
-      "open_router": 2,
-      "google": 2,
-        "openai": 2,
-        "anthropic": 2
-    }
-  },
-  "monthly_limits": {
-    "per_model": {
-      "Hello_worldModel": 2
+    "daily_limits": {
+        "per_model": {
+            "Hello_worldModel": 2
+        },
+        "per_service": {
+            "open_router": 2,
+            "google": 2,
+            "openai": 2,
+            "anthropic": 2
+        }
     },
-    "per_service": {
-      "open_router": 2,
-      "google": 2,
-        "openai": 2,
-        "anthropic": 2
-    }
-  }
+    "monthly_limits": {
+        "per_model": {
+            "Hello_worldModel": 2
+        },
+        "per_service": {
+            "open_router": 2,
+            "google": 2,
+            "openai": 2,
+            "anthropic": 2
+        }
+    },
+    "model_mappings": {
+        "anthropic/claude-3-haiku-20240307": "anthropic/claude-3-haiku:beta"
+    },
+    "excluded_models": [
+    ],
+    "mode": "strict"
 }
