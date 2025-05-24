@@ -16,5 +16,5 @@ GOOGLE_PROJECT_ID=680678599008
 GOOGLE_LOCATION=us-central1  # The region where your Vertex AI resources are located
 GOOGLE_API_KEY = "xx"
 
-OPENROUTER_KEY="xx"
+OPENROUTER_API_KEY="xx"
 WEATHER_API_KEY=""

@@ -1,21 +1,14 @@
 ### Ai Helper
-This is a simple ai helper to connect with openrouter, google, openai and openrouter. Input and output are always a pydantic model. Supports text, images and files and function calls.
+This is an LLM integration layer which relies heavily on Pydantic models and PydanticAI for LLM connectivity. 
 
 ### Activating the environment
 Simply run install.sh and then do source venv/bin/activate
-
-#### LLM TASK 
-Please implement the full functionality as outlined in this document. Success is determined by the successful completion of all tests and the ability to run the example.py file without errors.
-
-#### Specific implementation considerations
-- When loading PydanticModel with results, in most cases invididual fields that don't validate should be just discarded
-- We should add information about how many percent of the model fields are filled
 
 #### Guidelines for implementation
 - No function should be longer than 200 lines.
 - No class should be longer than 700 lines.
 - Feel free to create new files to make things more modular.
-- .env contains credentisals. env-example is provided.
+- .env contains the credentials. env-example is provided.
 - ALWAYS write tests before implementing. TDD!
 - ALWAYS stop for approval after creating the tests. 
 - ALWAYS run tests after making changes.
@@ -24,3 +17,7 @@ Please implement the full functionality as outlined in this document. Success is
 - When changing any methods, ALWAYS search for usages elsewhere.
 - To setup the project, run install.sh and then source venv/bin/activate
 
+
+## Notes about manual implementation vs. llm's
+
+This project works as a good (or bad) example on how architecture is evolutionary. Initially planned adapter implementation was unnecessary due to PydanticAI providing such good functionality. However, as PydanticAI is fairly new as a library, none of the tested LLM's had a full understanding of its workings. 
