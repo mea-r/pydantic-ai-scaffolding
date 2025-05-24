@@ -25,21 +25,14 @@ from py_models.base import LLMReport
 from py_models.hello_world import Hello_worldModel
 
 
+"""
+Saves reports to either files or database.
+"""
+
 class ReportGenerator:
-    """Handles file content and metadata"""
 
-    def __init__(self):
-        # load .env
+    def __init__(self, target: str = 'file'):
+        pass
 
-        key_openai = os.getenv('OPENAI_API_KEY')
-        key_anthropic = os.getenv('ANTHROPIC_API_KEY')
-        key_google = os.getenv('GOOGLE_API_KEY')
-        open_router = os.getenv('OPEN_ROUTER_API_KEY')
 
-        self.openai = OpenAIModel('gpt-4o', provider=OpenAIProvider(api_key=key_openai))
-        self.anthropic = AnthropicModel('claude-3-5-sonnet-latest', provider=AnthropicProvider(api_key=key_anthropic))
-        self.google = GoogleModel('gemini-2.5-pro-exp-03-25', provider=GoogleProvider(api_key=key_google))
-        self.open_router = OpenAIModel('gpt-4o', provider=OpenAIProvider(api_key=open_router))
-
-        self.info_provider = LLMInfoProvider()
 

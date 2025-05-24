@@ -3,40 +3,41 @@ Testing suite for the AIHelper class.
 """
 from ai_helper import AiHelper
 
-# base = AiHelper()
-# result, report = base.test()
+base = AiHelper()
+base.info_provider.print_price_list()
+#result, report = base.test()
 #
 # print(result.model_dump_json(indent=4))
 # print(report.model_dump_json(indent=4))
 
-models_to_test = [
-    ["google", "google/gemini-2.0-flash-lite-001"],  # provider first, model second
-    ["open_router", "deepseek/deepseek-prover-v2:free"],
-    ["open_router", "anthropic/claude-3-haiku"],
-    ["anthropic", "anthropic/claude-3-haiku-20240307"],
-    ["openai", "openai/gpt-4"],
-
-    # these two are supposed to throw an error
-    ["openai", "error"],
-    ["openai", "openai/errormodel"],
-]
-
-for provider,model in models_to_test:
-
-    print(f"Testing model: {model} with provider: {provider}")
-
-    try:
-        base = AiHelper()
-        result, report = base.test(model_name=model, provider=provider)
-    except Exception as e:
-        print(f"Error with model {model} and provider {provider}: {e}")
-        continue
-
-    print(result.model_dump_json(indent=4))
-    print(report.model_dump_json(indent=4))
-
-
-
+# models_to_test = [
+#     ["google", "google/gemini-2.0-flash-lite-001"],  # provider first, model second
+#     ["open_router", "deepseek/deepseek-prover-v2:free"],
+#     ["open_router", "anthropic/claude-3-haiku"],
+#     ["anthropic", "anthropic/claude-3-haiku-20240307"],
+#     ["openai", "openai/gpt-4"],
+#
+#     # these two are supposed to throw an error
+#     ["openai", "error"],
+#     ["openai", "openai/errormodel"],
+# ]
+#
+# for provider,model in models_to_test:
+#
+#     print(f"Testing model: {model} with provider: {provider}")
+#
+#     try:
+#         base = AiHelper()
+#         result, report = base.test(model_name=model, provider=provider)
+#     except Exception as e:
+#         print(f"Error with model {model} and provider {provider}: {e}")
+#         continue
+#
+#     print(result.model_dump_json(indent=4))
+#     print(report.model_dump_json(indent=4))
+#
+#
+#
 
 
 # cost_tracker = LLMInfoProvider()

@@ -1,0 +1,28 @@
+{
+  "defaults": {
+    "model": "open_router:"
+  },
+
+  "daily_limits": {
+    "per_model": {
+      "Hello_worldModel": 2
+    },
+    "per_service": {
+      "open_router": 2,
+      "google": 2,
+        "openai": 2,
+        "anthropic": 2
+    }
+  },
+  "monthly_limits": {
+    "per_model": {
+      "Hello_worldModel": 2
+    },
+    "per_service": {
+      "open_router": 2,
+      "google": 2,
+        "openai": 2,
+        "anthropic": 2
+    }
+  }
+}

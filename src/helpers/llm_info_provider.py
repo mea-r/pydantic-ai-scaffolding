@@ -79,6 +79,73 @@ class LLMInfoProvider:
 
         return data['data']
 
+    def get_price_list(self) -> dict:
+        models = self._get_models_data()
+        price_list = {}
+
+        for model in models:
+            pricing = model.get("pricing", {})
+            model_id = model.get("id", "")
+            comparison_price = float(pricing.get("completion", 0))*1000000
+
+            if comparison_price < 1:
+                price_category = "cheap"
+            elif comparison_price < 4:
+                price_category = "medium"
+            else:
+                price_category = "expensive"
+
+            price_list[model_id] = {
+                "price_category": price_category,
+                "prompt": round(float(pricing.get("prompt", 0))*1000000,2),
+                "completion": round(float(pricing.get("completion", 0))*1000000,2),
+                "request": round(float(pricing.get("request", 0))*1000000,2),
+                "image": round(float(pricing.get("image", 0))*1000000,2),
+                "web_search": round(float(pricing.get("web_search", 0))*1000000,2),
+                "internal_reasoning": round(float(pricing.get("internal_reasoning", 0))*1000000,2),
+                "input_cache_read": round(float(pricing.get("input_cache_read", 0)),2),
+                "input_cache_write": round(float(pricing.get("input_cache_write", 0)),2)
+            }
+
+
+        # sort from cheapest to most expensive
+        price_list = dict(sorted(price_list.items(), key=lambda item: item[1]['completion']))
+        return price_list
+
+    def print_price_list(self):
+        # print a table
+        price_list = self.get_price_list()
+        # titles
+        print(f"{'Model ID':<60} {'Price':<15} {'Prompt $M/t':<20} {'Completion $M/t':<20} {'Request $M/t':<20} {'Image $M/t':<20} {'Web Search $M/t':<20} {'Internal Reasoning $M/t':<20} {'Input Cache Read':<20} {'Input Cache Write':<20}")
+
+        for model_id, prices in price_list.items():
+            # determine color based on price category
+            if prices['price_category'] == 'cheap':
+                color = "\033[92m"
+            elif prices['price_category'] == 'medium':
+                color = "\033[93m"
+            else:
+                color = "\033[91m"
+            # print the model id and prices
+            print(f"{color}{model_id:<60}\033[0m {prices['price_category']:<15} {prices['prompt']:<20} {prices['completion']:<20} {prices['request']:<20} {prices['image']:<20} {prices['web_search']:<20} {prices['internal_reasoning']:<20} {prices['input_cache_read']:<20} {prices['input_cache_write']:<20}")
+
+
+    def get_cheapest_model(self) -> str:
+        start = 10
+        models = self._get_models_data()
+        cheapest_model = None
+
+        for model in models:
+            pricing = model.get("pricing", {})
+
+            if 'completion' in pricing and float(pricing['completion']) > 0:
+                cost = float(pricing['completion'])
+                if cost < start:
+                    start = cost
+                    cheapest_model = model['id']
+
+        return cheapest_model
+
     def get_model_info(self, model: str) -> dict | None:
         models = self._get_models_data()
 
@@ -144,6 +211,9 @@ class LLMInfoProvider:
             response = requests.get("https://openrouter.ai/api/v1/models")
             response.raise_for_status()
             model_data = response.json().get("data", [])
+
+            # remove models that do not support tools
+            model_data = [model for model in model_data if 'tools' in model.get('supported_parameters', [])]
 
             # Save to cache with timestamp
             cache_data = {
