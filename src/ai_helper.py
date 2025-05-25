@@ -1,4 +1,4 @@
-from typing import Any, Optional, Union, TypeVar, Tuple
+from typing import Any, Optional, Union, TypeVar, Tuple, List
 from datetime import datetime
 import uuid
 import os
@@ -6,6 +6,7 @@ from pathlib import Path
 
 from pydantic_ai import Agent
 from pydantic_ai.agent import AgentRunResult
+from pydantic_ai.messages import ModelResponse, ToolCallPart
 from pydantic_ai.providers.google import GoogleProvider
 
 from pydantic_ai.models.openai import OpenAIModel
@@ -56,7 +57,7 @@ class AiHelper:
         agent = Agent(llm_provider, output_type=pydantic_model, instrument=True, tools=tools)
         agent_output = agent.run_sync(prompt)
         result = agent_output.output
-        return result, self._post_process(agent_output, llm_model_name, provider, pydantic_model.__class__.__name__)
+        return result, self._post_process(agent_output, llm_model_name, provider, pydantic_model.__name__)
 
     """
     Usage data calculation. Save hooks for reporting.
@@ -76,8 +77,39 @@ class AiHelper:
         report.cost = self.info_provider.get_cost_info(model_name, agent_result.usage())
         report.fill_percentage = percentage
 
+        self.usage_tracker.add_usage(
+            report,
+            service=provider,
+            model_name=model_name,  # ensure this is the full name like 'openai/gpt-4o'
+            pydantic_model_name=pydantic_model_name,
+            tool_names_called=self._extract_tool_names(agent_result)
+        )
+
         self.usage_tracker.add_usage(report, service=provider, model_name=model_name,pydantic_model_name=pydantic_model_name)
         return report
+
+    def _extract_tool_names(self, agent_run_result: AgentRunResult) -> List[str]:
+        """
+        Extracts tool names from the agent run result using the all_messages() method.
+        This is suitable for pydantic-ai v1.x+.
+        """
+        tool_names_called: List[str] = []
+
+        if not hasattr(agent_run_result, 'all_messages') or not callable(agent_run_result.all_messages):
+            print("Warning: agent_run_result.all_messages() not available. Tool tracking might be using an outdated method or fail.")
+            # Consider a fallback to the older history inspection if you need to support multiple pydantic-ai versions
+            return []
+
+        messages = agent_run_result.all_messages()
+        if not messages:
+            return []
+
+        for message_item in messages: # message_item can be ModelRequest or ModelResponse
+            if isinstance(message_item, ModelResponse):
+                for part in message_item.parts:
+                    if isinstance(part, ToolCallPart):
+                        tool_names_called.append(part.tool_name)
+        return tool_names_called
 
     def _get_llm_provider(self, name: str, model_name: str) -> Any:
         # if not self.info_provider.get_model_info(model_name):

@@ -3,6 +3,7 @@ import os
 import time
 import requests
 from pydantic_ai.usage import Usage
+from tabulate import tabulate
 
 from helpers.config_helper import ConfigHelper
 
@@ -133,28 +134,40 @@ class LLMInfoProvider:
         price_list = dict(sorted(price_list.items(), key=lambda item: item[1]['completion']))
         return price_list
 
-    def print_price_list(self):
-        # print a table
+    def format_price_list(self) -> str:
+        """
+        Formats the price list into a nicely formatted table string.
+        """
         price_list = self.get_price_list()
-        # titles
-        print(f"{'Model ID':<60} {'Price':<15} {'Prompt $M/t':<20} {'Completion $M/t':<20} {'Request $M/t':<20} {'Image $M/t':<20} {'Web Search $M/t':<20} {'Internal Reasoning $M/t':<20} {'Input Cache Read':<20} {'Input Cache Write':<20}")
+        table_data = []
+        headers = ['Model ID', 'Price Category', 'Prompt $M/t', 'Completion $M/t', 'Request $M/t', 'Image $M/t', 'Web Search $M/t', 'Internal Reasoning $M/t', 'Input Cache Read', 'Input Cache Write']
 
         for model_id, prices in price_list.items():
-            # determine color based on price category
-            if prices['price_category'] == 'cheap':
-                color = "\033[92m"
-            elif prices['price_category'] == 'medium':
-                color = "\033[93m"
-            else:
-                color = "\033[91m"
-            # print the model id and prices
-            print(f"{color}{model_id:<60}\033[0m {prices['price_category']:<15} {prices['prompt']:<20} {prices['completion']:<20} {prices['request']:<20} {prices['image']:<20} {prices['web_search']:<20} {prices['internal_reasoning']:<20} {prices['input_cache_read']:<20} {prices['input_cache_write']:<20}")
+            table_data.append([
+                model_id,
+                prices['price_category'],
+                prices['prompt'],
+                prices['completion'],
+                prices['request'],
+                prices['image'],
+                prices['web_search'],
+                prices['internal_reasoning'],
+                prices['input_cache_read'],
+                prices['input_cache_write']
+            ])
+
+        price_table = tabulate(table_data, headers=headers, tablefmt='grid')
 
         total_models = len(self._get_models_data(include_excluded=True))
         usable_models = len(price_list)
-        print(f"\n\n{'Total models':<40}", total_models)
-        print(f"{'Excluded due to poor tool usage':<40}", total_models-usable_models)
-        print(f"{'Usable models':<40}", usable_models)
+
+        summary_output = [
+            f"\n\nTotal models: {total_models}",
+            f"Excluded due to poor tool usage: {total_models - usable_models}",
+            f"Usable models: {usable_models}"
+        ]
+
+        return price_table + "\n".join(summary_output)
 
 
     def get_cheapest_model(self) -> str:

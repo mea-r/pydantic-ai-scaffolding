@@ -12,6 +12,9 @@ from py_models.base import BasePyModel
 
 
 class Hello_worldModel(BasePyModel):
+
+    name: ClassVar[str] = "Hello_worldModel"
+
     """
     Model for extracting structured information for hello_world
     """

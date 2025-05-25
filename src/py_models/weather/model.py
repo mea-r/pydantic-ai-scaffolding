@@ -13,6 +13,8 @@ from py_models.base import BasePyModel
 
 class WeatherModel(BasePyModel):
 
+    name: ClassVar[str] = "WeatherModel"
+
     # Define model fields - REPLACE WITH YOUR SCHEMA
     tool_results: Optional[dict] = Field(..., description="Results from tool calls")
     haiku: Optional[str] = Field(..., description="Haiku about the weather")
