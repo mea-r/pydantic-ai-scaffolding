@@ -1,6 +1,6 @@
 {
-    "usage_today": 0.85562903,
-    "usage_this_month": 0.85562903,
+    "usage_today": 0.85893903,
+    "usage_this_month": 0.85893903,
     "daily_usage": [
         {
             "month": "2025-05",
@@ -769,6 +769,18 @@
             "total_tokens": 1010,
             "requests": 4,
             "cost": 0.000739
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-4o",
+            "service": "openai",
+            "pydantic_model_name": "FileAnalysisModel",
+            "input_tokens": 652,
+            "output_tokens": 168,
+            "total_tokens": 820,
+            "requests": 2,
+            "cost": 0.00331
         }
     ],
     "daily_tool_usage": [
@@ -788,7 +800,7 @@
             "month": "2025-05",
             "day": "2025-05-25",
             "tool_name": "final_result",
-            "calls": 69
+            "calls": 70
         }
     ],
     "fill_percentage_by_pydantic_model": {
@@ -796,6 +808,11 @@
             "average": 85.703125,
             "count": 128,
             "sum_total": 10970.0
+        },
+        "FileAnalysisModel": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
         }
     },
     "fill_percentage_by_llm_model": {
@@ -1025,9 +1042,9 @@
             "sum_total": 66.0
         },
         "openai/gpt-4o": {
-            "average": 66.0,
-            "count": 2,
-            "sum_total": 132.0
+            "average": 83.0,
+            "count": 4,
+            "sum_total": 332.0
         },
         "openai/gpt-4o:extended": {
             "average": 33.0,

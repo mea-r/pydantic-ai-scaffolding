@@ -5,6 +5,7 @@ from ai_helper import AiHelper
 from py_models.base import LLMReport
 from py_models.hello_world.model import Hello_worldModel
 from py_models.weather.model import WeatherModel
+from py_models.file_analysis.model import FileAnalysisModel
 
 from tools.tool_date import tool_get_human_date
 from tools.tool_weather import tool_get_weather
@@ -32,3 +33,11 @@ def test_weather(model_name: str = 'openai/gpt-4.1', provider='openai') -> Tuple
     ]
 
     return base.get_result(prompt, WeatherModel, llm_model_name=model_name, provider=provider, tools=tools)
+
+
+def test_file_analysis(model_name: str = 'openai/gpt-4o', provider='openai') -> Tuple[T, LLMReport]:
+    base = AiHelper()
+    prompt = 'Please analyze this file and extract its text content and provide a summary of its main content and purpose.'
+    file_path = 'tests/files/test.pdf'
+    
+    return base.get_result(prompt, FileAnalysisModel, llm_model_name=model_name, provider=provider, file=file_path)
