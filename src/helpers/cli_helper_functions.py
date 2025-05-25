@@ -29,7 +29,7 @@ def flag_non_working_models():
         except Exception as e:
             print(f"Error with model {model}: {e}")
             config_helper.append_config_list('excluded_models', model)
-            with open(report_file, 'w') as f:
+            with open(report_file, 'a') as f:
                 f.write(f"Model: {model} Error: {e}\n")
             continue
 
