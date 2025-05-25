@@ -1,0 +1,1123 @@
+{
+    "usage_today": 0.85562903,
+    "usage_this_month": 0.85562903,
+    "daily_usage": [
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/o4-mini-high",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 1140,
+            "output_tokens": 7288,
+            "total_tokens": 8428,
+            "requests": 6,
+            "cost": 0.0333212
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/o4-mini",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 1140,
+            "output_tokens": 1900,
+            "total_tokens": 3040,
+            "requests": 6,
+            "cost": 0.009614
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-4.1",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 760,
+            "output_tokens": 190,
+            "total_tokens": 950,
+            "requests": 4,
+            "cost": 0.00304
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-4.1-mini",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 760,
+            "output_tokens": 244,
+            "total_tokens": 1004,
+            "requests": 4,
+            "cost": 0.0006944
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-4.1-nano",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 760,
+            "output_tokens": 228,
+            "total_tokens": 988,
+            "requests": 4,
+            "cost": 0.0001672
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "x-ai/grok-3-mini-beta",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2906,
+            "output_tokens": 394,
+            "total_tokens": 7786,
+            "requests": 6,
+            "cost": 0.0010688
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "x-ai/grok-3-beta",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2900,
+            "output_tokens": 388,
+            "total_tokens": 3288,
+            "requests": 6,
+            "cost": 0.01452
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "meta-llama/llama-4-maverick",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2106,
+            "output_tokens": 264,
+            "total_tokens": 2370,
+            "requests": 4,
+            "cost": 0.00049536
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "meta-llama/llama-4-scout",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 3496,
+            "output_tokens": 340,
+            "total_tokens": 3836,
+            "requests": 6,
+            "cost": 0.00038168
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "deepseek/deepseek-chat-v3-0324",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2662,
+            "output_tokens": 424,
+            "total_tokens": 3086,
+            "requests": 6,
+            "cost": 0.00117172
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "mistralai/mistral-small-3.1-24b-instruct",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 1414,
+            "output_tokens": 254,
+            "total_tokens": 1668,
+            "requests": 4,
+            "cost": 0.0001088
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-4.5-preview",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 760,
+            "output_tokens": 280,
+            "total_tokens": 1040,
+            "requests": 4,
+            "cost": 0.099
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "anthropic/claude-3.7-sonnet",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 4154,
+            "output_tokens": 486,
+            "total_tokens": 4640,
+            "requests": 6,
+            "cost": 0.019752
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "anthropic/claude-3.7-sonnet:beta",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 4154,
+            "output_tokens": 492,
+            "total_tokens": 4646,
+            "requests": 6,
+            "cost": 0.019842
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "mistralai/mistral-saba",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 1410,
+            "output_tokens": 310,
+            "total_tokens": 1720,
+            "requests": 4,
+            "cost": 0.000468
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/o3-mini-high",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 1104,
+            "output_tokens": 11178,
+            "total_tokens": 12282,
+            "requests": 6,
+            "cost": 0.0503976
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "google/gemini-2.0-flash-001",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 996,
+            "output_tokens": 310,
+            "total_tokens": 1306,
+            "requests": 6,
+            "cost": 0.0002236
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/o3-mini",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 1104,
+            "output_tokens": 2600,
+            "total_tokens": 3704,
+            "requests": 6,
+            "cost": 0.0126544
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "mistralai/mistral-small-24b-instruct-2501",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 1418,
+            "output_tokens": 228,
+            "total_tokens": 1646,
+            "requests": 4,
+            "cost": 0.00009826
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "mistralai/codestral-2501",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 1414,
+            "output_tokens": 274,
+            "total_tokens": 1688,
+            "requests": 4,
+            "cost": 0.0006708
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "deepseek/deepseek-chat",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 1710,
+            "output_tokens": 276,
+            "total_tokens": 1986,
+            "requests": 4,
+            "cost": 0.00089544
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "x-ai/grok-2-1212",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2842,
+            "output_tokens": 440,
+            "total_tokens": 3282,
+            "requests": 6,
+            "cost": 0.010084
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-4o-2024-11-20",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 760,
+            "output_tokens": 240,
+            "total_tokens": 1000,
+            "requests": 4,
+            "cost": 0.0043
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "mistralai/mistral-large-2411",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 3742,
+            "output_tokens": 908,
+            "total_tokens": 4650,
+            "requests": 6,
+            "cost": 0.012932
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "mistralai/mistral-large-2407",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 1556,
+            "output_tokens": 350,
+            "total_tokens": 1906,
+            "requests": 4,
+            "cost": 0.005212
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "mistralai/pixtral-large-2411",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 1498,
+            "output_tokens": 284,
+            "total_tokens": 1782,
+            "requests": 4,
+            "cost": 0.0047
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "anthropic/claude-3.5-haiku:beta",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2972,
+            "output_tokens": 472,
+            "total_tokens": 3444,
+            "requests": 4,
+            "cost": 0.0042656
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "anthropic/claude-3.5-haiku",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2972,
+            "output_tokens": 456,
+            "total_tokens": 3428,
+            "requests": 4,
+            "cost": 0.0042016
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "anthropic/claude-3.5-haiku-20241022:beta",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2972,
+            "output_tokens": 458,
+            "total_tokens": 3430,
+            "requests": 4,
+            "cost": 0.0042096
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "anthropic/claude-3.5-haiku-20241022",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2972,
+            "output_tokens": 468,
+            "total_tokens": 3440,
+            "requests": 4,
+            "cost": 0.0042496
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "anthropic/claude-3.5-sonnet:beta",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2808,
+            "output_tokens": 472,
+            "total_tokens": 3280,
+            "requests": 4,
+            "cost": 0.015504
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "anthropic/claude-3.5-sonnet",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2808,
+            "output_tokens": 450,
+            "total_tokens": 3258,
+            "requests": 4,
+            "cost": 0.015174
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "x-ai/grok-beta",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 4538,
+            "output_tokens": 762,
+            "total_tokens": 5300,
+            "requests": 8,
+            "cost": 0.03412
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "mistralai/ministral-8b",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2220,
+            "output_tokens": 356,
+            "total_tokens": 2576,
+            "requests": 6,
+            "cost": 0.0002576
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "mistralai/ministral-3b",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2224,
+            "output_tokens": 302,
+            "total_tokens": 2526,
+            "requests": 6,
+            "cost": 0.00010104
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "google/gemini-flash-1.5-8b",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 916,
+            "output_tokens": 282,
+            "total_tokens": 1198,
+            "requests": 6,
+            "cost": 0.00007665
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "qwen/qwen-2.5-72b-instruct",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2862,
+            "output_tokens": 420,
+            "total_tokens": 3282,
+            "requests": 4,
+            "cost": 0.00050724
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "mistralai/pixtral-12b",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2224,
+            "output_tokens": 244,
+            "total_tokens": 2468,
+            "requests": 6,
+            "cost": 0.0002468
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-4o-2024-08-06",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 760,
+            "output_tokens": 246,
+            "total_tokens": 1006,
+            "requests": 4,
+            "cost": 0.00436
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "meta-llama/llama-3.1-8b-instruct",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2498,
+            "output_tokens": 406,
+            "total_tokens": 2904,
+            "requests": 4,
+            "cost": 0.00006214
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "mistralai/mistral-nemo",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 1448,
+            "output_tokens": 252,
+            "total_tokens": 1700,
+            "requests": 4,
+            "cost": 0.0000466
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-4o-mini",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 760,
+            "output_tokens": 218,
+            "total_tokens": 978,
+            "requests": 4,
+            "cost": 0.0002448
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "anthropic/claude-3.5-sonnet-20240620:beta",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2656,
+            "output_tokens": 526,
+            "total_tokens": 3182,
+            "requests": 4,
+            "cost": 0.015858
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "anthropic/claude-3.5-sonnet-20240620",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2656,
+            "output_tokens": 542,
+            "total_tokens": 3198,
+            "requests": 4,
+            "cost": 0.016098
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-4o-2024-05-13",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 760,
+            "output_tokens": 180,
+            "total_tokens": 940,
+            "requests": 4,
+            "cost": 0.0065
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-4o",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 760,
+            "output_tokens": 246,
+            "total_tokens": 1006,
+            "requests": 4,
+            "cost": 0.00436
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-4o:extended",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 760,
+            "output_tokens": 180,
+            "total_tokens": 940,
+            "requests": 4,
+            "cost": 0.0078
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-4-turbo",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 776,
+            "output_tokens": 218,
+            "total_tokens": 994,
+            "requests": 4,
+            "cost": 0.0143
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "google/gemini-pro-1.5",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 932,
+            "output_tokens": 242,
+            "total_tokens": 1174,
+            "requests": 6,
+            "cost": 0.002375
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "anthropic/claude-3-haiku:beta",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 4400,
+            "output_tokens": 574,
+            "total_tokens": 4974,
+            "requests": 6,
+            "cost": 0.0018175
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "anthropic/claude-3-haiku",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 4400,
+            "output_tokens": 524,
+            "total_tokens": 4924,
+            "requests": 6,
+            "cost": 0.001755
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "anthropic/claude-3-opus:beta",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 4046,
+            "output_tokens": 512,
+            "total_tokens": 4558,
+            "requests": 6,
+            "cost": 0.09909
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "anthropic/claude-3-opus",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2736,
+            "output_tokens": 550,
+            "total_tokens": 3286,
+            "requests": 4,
+            "cost": 0.08229
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "anthropic/claude-3-sonnet:beta",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2552,
+            "output_tokens": 542,
+            "total_tokens": 3094,
+            "requests": 4,
+            "cost": 0.015786
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "anthropic/claude-3-sonnet",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 2552,
+            "output_tokens": 564,
+            "total_tokens": 3116,
+            "requests": 4,
+            "cost": 0.016116
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "mistralai/mistral-large",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 1548,
+            "output_tokens": 280,
+            "total_tokens": 1828,
+            "requests": 4,
+            "cost": 0.004776
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-4-turbo-preview",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 776,
+            "output_tokens": 244,
+            "total_tokens": 1020,
+            "requests": 4,
+            "cost": 0.01508
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-3.5-turbo-1106",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 776,
+            "output_tokens": 214,
+            "total_tokens": 990,
+            "requests": 4,
+            "cost": 0.001204
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-4-1106-preview",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 776,
+            "output_tokens": 282,
+            "total_tokens": 1058,
+            "requests": 4,
+            "cost": 0.01622
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-3.5-turbo-16k",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 776,
+            "output_tokens": 190,
+            "total_tokens": 966,
+            "requests": 4,
+            "cost": 0.003088
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-4-32k",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 1148,
+            "output_tokens": 184,
+            "total_tokens": 1332,
+            "requests": 6,
+            "cost": 0.09096
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-3.5-turbo",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 776,
+            "output_tokens": 232,
+            "total_tokens": 1008,
+            "requests": 4,
+            "cost": 0.000736
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-4",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 1148,
+            "output_tokens": 180,
+            "total_tokens": 1328,
+            "requests": 6,
+            "cost": 0.04524
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-3.5-turbo-0125",
+            "service": "open_router",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 776,
+            "output_tokens": 234,
+            "total_tokens": 1010,
+            "requests": 4,
+            "cost": 0.000739
+        }
+    ],
+    "daily_tool_usage": [
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "tool_name": "tool_get_weather",
+            "calls": 64
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "tool_name": "tool_get_human_date",
+            "calls": 64
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "tool_name": "final_result",
+            "calls": 69
+        }
+    ],
+    "fill_percentage_by_pydantic_model": {
+        "WeatherModel": {
+            "average": 85.703125,
+            "count": 128,
+            "sum_total": 10970.0
+        }
+    },
+    "fill_percentage_by_llm_model": {
+        "openai/o4-mini-high": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "openai/o4-mini": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "openai/gpt-4.1": {
+            "average": 33.0,
+            "count": 2,
+            "sum_total": 66.0
+        },
+        "openai/gpt-4.1-mini": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "openai/gpt-4.1-nano": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "x-ai/grok-3-mini-beta": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "x-ai/grok-3-beta": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "meta-llama/llama-4-maverick": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "meta-llama/llama-4-scout": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "deepseek/deepseek-chat-v3-0324": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "mistralai/mistral-small-3.1-24b-instruct": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "openai/gpt-4.5-preview": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "anthropic/claude-3.7-sonnet": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "anthropic/claude-3.7-sonnet:beta": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "mistralai/mistral-saba": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "openai/o3-mini-high": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "google/gemini-2.0-flash-001": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "openai/o3-mini": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "mistralai/mistral-small-24b-instruct-2501": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "mistralai/codestral-2501": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "deepseek/deepseek-chat": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "x-ai/grok-2-1212": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "openai/gpt-4o-2024-11-20": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "mistralai/mistral-large-2411": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "mistralai/mistral-large-2407": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "mistralai/pixtral-large-2411": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "anthropic/claude-3.5-haiku:beta": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "anthropic/claude-3.5-haiku": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "anthropic/claude-3.5-haiku-20241022:beta": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "anthropic/claude-3.5-haiku-20241022": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "anthropic/claude-3.5-sonnet:beta": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "anthropic/claude-3.5-sonnet": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "x-ai/grok-beta": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "mistralai/ministral-8b": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "mistralai/ministral-3b": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "google/gemini-flash-1.5-8b": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "qwen/qwen-2.5-72b-instruct": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "mistralai/pixtral-12b": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "openai/gpt-4o-2024-08-06": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "meta-llama/llama-3.1-8b-instruct": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "mistralai/mistral-nemo": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "openai/gpt-4o-mini": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "anthropic/claude-3.5-sonnet-20240620:beta": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "anthropic/claude-3.5-sonnet-20240620": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "openai/gpt-4o-2024-05-13": {
+            "average": 33.0,
+            "count": 2,
+            "sum_total": 66.0
+        },
+        "openai/gpt-4o": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "openai/gpt-4o:extended": {
+            "average": 33.0,
+            "count": 2,
+            "sum_total": 66.0
+        },
+        "openai/gpt-4-turbo": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "google/gemini-pro-1.5": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "anthropic/claude-3-haiku:beta": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "anthropic/claude-3-haiku": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "anthropic/claude-3-opus:beta": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "anthropic/claude-3-opus": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "anthropic/claude-3-sonnet:beta": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "anthropic/claude-3-sonnet": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "mistralai/mistral-large": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "openai/gpt-4-turbo-preview": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "openai/gpt-3.5-turbo-1106": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "openai/gpt-4-1106-preview": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "openai/gpt-3.5-turbo-16k": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "openai/gpt-4-32k": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "openai/gpt-3.5-turbo": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "openai/gpt-4": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        },
+        "openai/gpt-3.5-turbo-0125": {
+            "average": 66.0,
+            "count": 2,
+            "sum_total": 132.0
+        }
+    }
+}
