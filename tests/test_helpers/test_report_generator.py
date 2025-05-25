@@ -3,7 +3,7 @@ import os
 from unittest.mock import patch, MagicMock
 
 # Assuming the ReportGenerator class is in src/helpers/report_generator.py
-from src.helpers.report_generator import ReportGenerator
+from helpers.report_generator import ReportGenerator
 
 class TestReportGenerator(unittest.TestCase):
 

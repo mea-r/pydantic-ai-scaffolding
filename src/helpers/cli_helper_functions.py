@@ -2,7 +2,7 @@ from helpers.config_helper import ConfigHelper
 from helpers.llm_info_provider import LLMInfoProvider
 from py_models.weather.model import WeatherModel
 from py_models.file_analysis.model import FileAnalysisModel
-from tests.helpers import test_weather, test_file_analysis
+from helpers.test_helpers_utils import test_weather, test_file_analysis
 
 """
 This script will run through all models and test the tool calling, marking non-working ones to config.

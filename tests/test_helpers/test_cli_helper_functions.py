@@ -5,10 +5,10 @@ from unittest.mock import patch, MagicMock
 from pathlib import Path
 
 # Assuming the cli_helper_functions is in src/helpers/cli_helper_functions.py
-from src.helpers.cli_helper_functions import flag_non_working_models
-from src.helpers.config_helper import ConfigHelper
-from src.py_models.weather.model import WeatherModel
-from src.py_models.base import LLMReport
+from helpers.cli_helper_functions import flag_non_working_models
+from helpers.config_helper import ConfigHelper
+from py_models.weather.model import WeatherModel
+from py_models.base import LLMReport
 from pydantic_ai.usage import Usage
 
 # Define a dummy config file path for testing
@@ -35,29 +35,29 @@ class TestCliHelperFunctions(unittest.TestCase):
         # Patch the ConfigHelper to use the dummy config file
         # This is a necessary mock to control the config file used by the function
         # without modifying the actual config.json.
-        patcher_config_helper_path = patch('src.helpers.config_helper.ConfigHelper.__init__', return_value=None)
+        patcher_config_helper_path = patch('helpers.config_helper.ConfigHelper.__init__', return_value=None)
         self.mock_config_helper_init = patcher_config_helper_path.start()
         self.mock_config_helper_init.side_effect = lambda self: setattr(self, 'config_path', str(TEST_CONFIG_PATH))
 
-        patcher_config_helper_load = patch('src.helpers.config_helper.ConfigHelper._load')
+        patcher_config_helper_load = patch('helpers.config_helper.ConfigHelper._load')
         self.mock_config_helper_load = patcher_config_helper_load.start()
         self.mock_config_helper_load.side_effect = lambda: ConfigHelper(base_path=str(TEST_CONFIG_PATH.parent))._load()
 
-        patcher_config_helper_save = patch('src.helpers.config_helper.ConfigHelper._save')
+        patcher_config_helper_save = patch('helpers.config_helper.ConfigHelper._save')
         self.mock_config_helper_save = patcher_config_helper_save.start()
         self.mock_config_helper_save.side_effect = lambda self: ConfigHelper(base_path=str(TEST_CONFIG_PATH.parent))._save()
 
-        patcher_config_helper_get_config = patch('src.helpers.config_helper.ConfigHelper.get_config')
+        patcher_config_helper_get_config = patch('helpers.config_helper.ConfigHelper.get_config')
         self.mock_config_helper_get_config = patcher_config_helper_get_config.start()
         self.mock_config_helper_get_config.side_effect = lambda key: ConfigHelper(base_path=str(TEST_CONFIG_PATH.parent)).get_config(key)
 
-        patcher_config_helper_append_config_list = patch('src.helpers.config_helper.ConfigHelper.append_config_list')
+        patcher_config_helper_append_config_list = patch('helpers.config_helper.ConfigHelper.append_config_list')
         self.mock_config_helper_append_config_list = patcher_config_helper_append_config_list.start()
         self.mock_config_helper_append_config_list.side_effect = lambda key, value: ConfigHelper(base_path=str(TEST_CONFIG_PATH.parent)).append_config_list(key, value)
 
 
         # Patch LLMInfoProvider to return a predictable list of models
-        patcher_info_provider = patch('src.helpers.cli_helper_functions.LLMInfoProvider')
+        patcher_info_provider = patch('helpers.cli_helper_functions.LLMInfoProvider')
         self.mock_info_provider_class = patcher_info_provider.start()
         self.mock_info_provider_instance = MagicMock()
         self.mock_info_provider_class.return_value = self.mock_info_provider_instance
@@ -70,7 +70,7 @@ class TestCliHelperFunctions(unittest.TestCase):
         ]
 
         # Patch the report file path
-        patcher_report_file = patch('src.helpers.cli_helper_functions.report_file', new=str(TEST_REPORT_FILE))
+        patcher_report_file = patch('helpers.cli_helper_functions.report_file', new=str(TEST_REPORT_FILE))
         self.mock_report_file = patcher_report_file.start()
 
         # Patch print to capture output
@@ -81,7 +81,7 @@ class TestCliHelperFunctions(unittest.TestCase):
         # To test flag_non_working_models without mocking test_weather, we would need
         # a real test_weather function that interacts with real LLMs, which is not feasible.
         # Therefore, I will simulate the behavior of test_weather.
-        patcher_test_weather = patch('src.helpers.cli_helper_functions.test_weather')
+        patcher_test_weather = patch('helpers.cli_helper_functions.test_weather')
         self.mock_test_weather = patcher_test_weather.start()
 
         # Configure the mock test_weather to simulate different outcomes

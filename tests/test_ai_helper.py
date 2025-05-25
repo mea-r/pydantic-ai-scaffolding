@@ -5,9 +5,9 @@ from datetime import datetime
 import uuid
 
 # Assuming the AiHelper class is in src/ai_helper.py
-from src.ai_helper import AiHelper
-from src.py_models.base import LLMReport
-from src.py_models.file_analysis.model import FileAnalysisModel
+from ai_helper import AiHelper
+from py_models.base import LLMReport
+from py_models.file_analysis.model import FileAnalysisModel
 from pydantic_ai.agent import AgentRunResult
 from pydantic_ai.usage import Usage
 from pydantic import BaseModel
@@ -20,12 +20,12 @@ class SimpleTestModel(BaseModel):
 
 class TestAiHelper(unittest.TestCase):
 
-    @patch('src.ai_helper.OpenAIProvider')
-    @patch('src.ai_helper.AnthropicProvider')
-    @patch('src.ai_helper.GoogleProvider')
-    @patch('src.ai_helper.OpenRouterProvider')
-    @patch('src.ai_helper.LLMInfoProvider')
-    @patch('src.ai_helper.UsageTracker')
+    @patch('ai_helper.OpenAIProvider')
+    @patch('ai_helper.AnthropicProvider')
+    @patch('ai_helper.GoogleProvider')
+    @patch('ai_helper.OpenRouterProvider')
+    @patch('ai_helper.LLMInfoProvider')
+    @patch('ai_helper.UsageTracker')
     @patch.dict(os.environ, {'OPENAI_API_KEY': 'fake_openai_key', 'ANTHROPIC_API_KEY': 'fake_anthropic_key', 'GOOGLE_API_KEY': 'fake_google_key', 'OPEN_ROUTER_API_KEY': 'fake_openrouter_key'})
     def setUp(self, MockUsageTracker, MockLLMInfoProvider, MockOpenRouterProvider, MockGoogleProvider, MockAnthropicProvider, MockOpenAIProvider):
         # Since the request is to write tests *without mocking*,
@@ -76,8 +76,9 @@ class TestAiHelper(unittest.TestCase):
     # external LLM calls. I will focus on testing the pre and post-processing logic
     # assuming an agent run result is available.
 
-    @patch('src.ai_helper.Agent')
-    def test_get_result_basic(self, MockAgent):
+    @patch('ai_helper.Agent')
+    @patch.object(AiHelper, '_get_llm_provider') # Patch _get_llm_provider
+    def test_get_result_basic(self, mock_get_llm_provider, MockAgent):
         # Mocking the Agent.run_sync call to simulate a result without a live LLM call
         mock_agent_instance = MockAgent.return_value
         mock_agent_run_result = MagicMock(spec=AgentRunResult)
@@ -96,10 +97,18 @@ class TestAiHelper(unittest.TestCase):
             llm_model_name = 'openai/gpt-4o'
             provider = 'openai'
 
+            # Configure the patched _get_llm_provider to return a mock provider
+            mock_provider_instance = MagicMock()
+            mock_get_llm_provider.return_value = mock_provider_instance
+
             result, report = self.ai_helper.get_result(prompt, pydantic_model, llm_model_name, provider=provider)
 
+            # Assert that _get_llm_provider was called correctly
+            mock_get_llm_provider.assert_called_once_with(provider, llm_model_name)
+
+            # Assert that Agent was called with the mock provider returned by _get_llm_provider
             MockAgent.assert_called_once_with(
-                self.ai_helper._get_llm_provider(provider, llm_model_name), # This will call the patched _get_llm_provider
+                mock_provider_instance,
                 output_type=pydantic_model,
                 instrument=True,
                 tools=[]
@@ -214,8 +223,8 @@ class TestAiHelper(unittest.TestCase):
                                     provider=provider, file=non_existent_file)
         self.assertIn("File not found: non_existent_file.pdf", str(cm.exception))
 
-    @patch('src.ai_helper.Agent')
-    @patch('src.ai_helper.Path')
+    @patch('ai_helper.Agent')
+    @patch('ai_helper.Path')
     def test_file_analysis_with_file(self, MockPath, MockAgent):
         """Test file analysis with a valid file"""
         # Mock file operations
@@ -224,7 +233,7 @@ class TestAiHelper(unittest.TestCase):
         mock_path_instance.read_bytes.return_value = b'fake pdf content'
         
         # Mock mimetypes
-        with patch('src.ai_helper.mimetypes.guess_type') as mock_guess_type:
+        with patch('ai_helper.mimetypes.guess_type') as mock_guess_type:
             mock_guess_type.return_value = ('application/pdf', None)
             
             # Mock agent
@@ -272,14 +281,16 @@ class TestAiHelper(unittest.TestCase):
                 self.assertEqual(result.text_content, "Sample PDF content")
                 self.assertEqual(result.content_summary, "This is a test PDF file")
 
-    @patch('src.ai_helper.Agent')  
+    @patch('ai_helper.Agent')  
     def test_file_analysis_without_file(self, MockAgent):
         """Test that normal text-only prompts still work when file is None"""
         mock_agent_instance = MockAgent.return_value
         mock_agent_run_result = MagicMock(spec=AgentRunResult)
         mock_agent_run_result.output = FileAnalysisModel(
-            text_content="Direct text input", 
-            content_summary="Analysis of direct text"
+            text_content="Direct text input",
+            content_summary="Analysis of direct text",
+            key="dummy_key",  # Added dummy key
+            value="dummy_value" # Added dummy value
         )
         mock_agent_run_result.usage.return_value = Usage(request_tokens=10, response_tokens=20, total_tokens=30, requests=1)
         mock_agent_run_result.all_messages.return_value = []

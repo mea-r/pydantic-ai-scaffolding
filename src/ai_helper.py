@@ -102,7 +102,6 @@ class AiHelper:
             tool_names_called=self._extract_tool_names(agent_result)
         )
 
-        self.usage_tracker.add_usage(report, service=provider, model_name=model_name,pydantic_model_name=pydantic_model_name)
         return report
 
     def _extract_tool_names(self, agent_run_result: AgentRunResult) -> List[str]:
@@ -156,4 +155,3 @@ class AiHelper:
             return self.open_router
         else:
             raise ValueError(f"Unknown provider: {name}")
-

@@ -1,10 +1,7 @@
-from typing import Tuple, TypeVar
+from typing import TypeVar
 
 import pytest
-from ai_helper import AiHelper
-from py_models.base import LLMReport
-from py_models.hello_world.model import Hello_worldModel
-from tests.helpers import test_hello_world
+from helpers.test_helpers_utils import test_hello_world
 
 T = TypeVar('T', bound='BasePyModel')
 

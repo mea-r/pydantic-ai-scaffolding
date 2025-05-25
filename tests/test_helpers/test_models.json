@@ -1,0 +1,50 @@
+{
+    "timestamp": 1748204654.546796,
+    "data": [
+        {
+            "id": "provider1/model_cheap",
+            "pricing": {
+                "prompt": "0.0000001",
+                "completion": "0.0000002"
+            },
+            "supported_parameters": [
+                "tools"
+            ]
+        },
+        {
+            "id": "provider2/model_medium",
+            "pricing": {
+                "prompt": "0.0000003",
+                "completion": "0.0000005"
+            },
+            "supported_parameters": [
+                "tools"
+            ]
+        },
+        {
+            "id": "provider3/model_expensive",
+            "pricing": {
+                "prompt": "0.0000006",
+                "completion": "0.0000008"
+            },
+            "supported_parameters": [
+                "tools"
+            ]
+        },
+        {
+            "id": "provider4/model_no_tools",
+            "pricing": {
+                "prompt": "0.0000001",
+                "completion": "0.0000002"
+            },
+            "supported_parameters": []
+        },
+        {
+            "id": "provider5/model_no_pricing",
+            "pricing": {},
+            "supported_parameters": [
+                "tools"
+            ]
+        }
+    ]
+}

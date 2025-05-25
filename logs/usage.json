@@ -1,6 +1,6 @@
 {
-    "usage_today": 0.312143485,
-    "usage_this_month": 0.312143485,
+    "usage_today": 0.376182445,
+    "usage_this_month": 0.376182445,
     "daily_usage": [
         {
             "month": "2025-05",
@@ -8,11 +8,11 @@
             "model": "anthropic/claude-sonnet-4",
             "service": "open_router",
             "pydantic_model_name": "FileAnalysisModel",
-            "input_tokens": 1008,
-            "output_tokens": 220,
-            "total_tokens": 1228,
-            "requests": 2,
-            "cost": 0.006324
+            "input_tokens": 2016,
+            "output_tokens": 440,
+            "total_tokens": 2456,
+            "requests": 4,
+            "cost": 0.012648
         },
         {
             "month": "2025-05",
@@ -20,11 +20,11 @@
             "model": "mistralai/devstral-small",
             "service": "open_router",
             "pydantic_model_name": "FileAnalysisModel",
-            "input_tokens": 370,
-            "output_tokens": 106,
-            "total_tokens": 476,
-            "requests": 2,
-            "cost": 0.0000365
+            "input_tokens": 740,
+            "output_tokens": 214,
+            "total_tokens": 954,
+            "requests": 4,
+            "cost": 0.00007319999999999999
         },
         {
             "month": "2025-05",
@@ -32,11 +32,11 @@
             "model": "google/gemini-2.5-flash-preview-05-20:thinking",
             "service": "open_router",
             "pydantic_model_name": "FileAnalysisModel",
-            "input_tokens": 2728,
-            "output_tokens": 436,
-            "total_tokens": 3164,
-            "requests": 2,
-            "cost": 0.0019352
+            "input_tokens": 5456,
+            "output_tokens": 1016,
+            "total_tokens": 6472,
+            "requests": 4,
+            "cost": 0.0043744000000000005
         },
         {
             "month": "2025-05",
@@ -788,11 +788,83 @@
             "model": "openai/gpt-4.1",
             "service": "openai",
             "pydantic_model_name": "WeatherModel",
-            "input_tokens": 760,
-            "output_tokens": 240,
-            "total_tokens": 1000,
-            "requests": 4,
+            "input_tokens": 3040,
+            "output_tokens": 935,
+            "total_tokens": 3975,
+            "requests": 16,
             "cost": 0.0
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "mistralai/ministral-3b",
+            "service": "open_router",
+            "pydantic_model_name": "Hello_worldModel",
+            "input_tokens": 3332,
+            "output_tokens": 407,
+            "total_tokens": 3739,
+            "requests": 14,
+            "cost": 0.00014956
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-4o",
+            "service": "openai",
+            "pydantic_model_name": "FileAnalysisModel",
+            "input_tokens": 2046,
+            "output_tokens": 326,
+            "total_tokens": 2372,
+            "requests": 6,
+            "cost": 0.008375
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "google/gemini-2.0-flash-lite-001",
+            "service": "google",
+            "pydantic_model_name": "Hello_worldModel",
+            "input_tokens": 1026,
+            "output_tokens": 66,
+            "total_tokens": 1092,
+            "requests": 6,
+            "cost": 0.0
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "anthropic/claude-3-haiku",
+            "service": "open_router",
+            "pydantic_model_name": "Hello_worldModel",
+            "input_tokens": 3606,
+            "output_tokens": 426,
+            "total_tokens": 4032,
+            "requests": 6,
+            "cost": 0.0014340000000000002
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "anthropic/claude-3-haiku-20240307",
+            "service": "anthropic",
+            "pydantic_model_name": "Hello_worldModel",
+            "input_tokens": 3672,
+            "output_tokens": 354,
+            "total_tokens": 4026,
+            "requests": 6,
+            "cost": 0.0013605
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "openai/gpt-4",
+            "service": "openai",
+            "pydantic_model_name": "Hello_worldModel",
+            "input_tokens": 1200,
+            "output_tokens": 132,
+            "total_tokens": 1332,
+            "requests": 6,
+            "cost": 0.04392
         }
     ],
     "daily_tool_usage": [
@@ -800,48 +872,53 @@
             "month": "2025-05",
             "day": "2025-05-25",
             "tool_name": "final_result",
-            "calls": 66
+            "calls": 102
         },
         {
             "month": "2025-05",
             "day": "2025-05-25",
             "tool_name": "tool_get_weather",
-            "calls": 1
+            "calls": 5
         },
         {
             "month": "2025-05",
             "day": "2025-05-25",
             "tool_name": "tool_get_human_date",
-            "calls": 1
+            "calls": 5
         }
     ],
     "fill_percentage_by_pydantic_model": {
         "FileAnalysisModel": {
             "average": 100.0,
-            "count": 130,
-            "sum_total": 13000.0
+            "count": 142,
+            "sum_total": 14200.0
         },
         "WeatherModel": {
-            "average": 66.0,
-            "count": 2,
-            "sum_total": 132.0
+            "average": 61.875,
+            "count": 8,
+            "sum_total": 495.0
+        },
+        "Hello_worldModel": {
+            "average": 100.0,
+            "count": 38,
+            "sum_total": 3800.0
         }
     },
     "fill_percentage_by_llm_model": {
         "anthropic/claude-sonnet-4": {
             "average": 100.0,
-            "count": 2,
-            "sum_total": 200.0
+            "count": 4,
+            "sum_total": 400.0
         },
         "mistralai/devstral-small": {
             "average": 100.0,
-            "count": 2,
-            "sum_total": 200.0
+            "count": 4,
+            "sum_total": 400.0
         },
         "google/gemini-2.5-flash-preview-05-20:thinking": {
             "average": 100.0,
-            "count": 2,
-            "sum_total": 200.0
+            "count": 4,
+            "sum_total": 400.0
         },
         "openai/codex-mini": {
             "average": 100.0,
@@ -1030,8 +1107,8 @@
         },
         "mistralai/ministral-3b": {
             "average": 100.0,
-            "count": 2,
-            "sum_total": 200.0
+            "count": 16,
+            "sum_total": 1600.0
         },
         "google/gemini-flash-1.5-8b": {
             "average": 100.0,
@@ -1075,8 +1152,8 @@
         },
         "openai/gpt-4o": {
             "average": 100.0,
-            "count": 2,
-            "sum_total": 200.0
+            "count": 8,
+            "sum_total": 800.0
         },
         "google/gemini-pro-1.5": {
             "average": 100.0,
@@ -1095,8 +1172,8 @@
         },
         "anthropic/claude-3-haiku": {
             "average": 100.0,
-            "count": 2,
-            "sum_total": 200.0
+            "count": 8,
+            "sum_total": 800.0
         },
         "anthropic/claude-3-opus:beta": {
             "average": 100.0,
@@ -1150,13 +1227,23 @@
         },
         "openai/gpt-4": {
             "average": 100.0,
-            "count": 2,
-            "sum_total": 200.0
+            "count": 8,
+            "sum_total": 800.0
         },
         "openai/gpt-4.1": {
-            "average": 66.0,
-            "count": 2,
-            "sum_total": 132.0
+            "average": 61.875,
+            "count": 8,
+            "sum_total": 495.0
+        },
+        "google/gemini-2.0-flash-lite-001": {
+            "average": 100.0,
+            "count": 6,
+            "sum_total": 600.0
+        },
+        "anthropic/claude-3-haiku-20240307": {
+            "average": 100.0,
+            "count": 6,
+            "sum_total": 600.0
         }
     }
 }

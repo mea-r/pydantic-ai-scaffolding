@@ -2,9 +2,10 @@ import unittest
 import os
 import json
 from pathlib import Path
+from unittest.mock import patch
 
 # Assuming the ConfigHelper class is in src/helpers/config_helper.py
-from src.helpers.config_helper import ConfigHelper, Config, Defaults, LimitConfig
+from helpers.config_helper import ConfigHelper, Config, Defaults, LimitConfig
 
 # Define a dummy config file path for testing
 TEST_CONFIG_PATH = Path(__file__).parent / 'test_config_helper_config.json'
@@ -30,7 +31,7 @@ class TestConfigHelper(unittest.TestCase):
         # Patch the ConfigHelper to use the dummy config file path
         # This is necessary to prevent the ConfigHelper from trying to load
         # the actual config.json in the project root during testing.
-        patcher_config_path = patch('src.helpers.config_helper.ConfigHelper.config_path', new=str(TEST_CONFIG_PATH))
+        patcher_config_path = patch('helpers.config_helper.ConfigHelper.config_path', new=str(TEST_CONFIG_PATH))
         self.mock_config_path = patcher_config_path.start()
 
 

@@ -6,8 +6,8 @@ from datetime import datetime, timedelta
 from unittest.mock import patch, MagicMock
 
 # Assuming the UsageTracker and related classes are in src/helpers/usage_tracker.py
-from src.helpers.usage_tracker import UsageTracker, HelperUsage, UsageItem, ToolUsageItem, FillPercentageStats, format_usage_data, print_usage_report, format_usage_from_file
-from src.py_models.base import LLMReport
+from helpers.usage_tracker import UsageTracker, HelperUsage, UsageItem, ToolUsageItem, FillPercentageStats, format_usage_data, print_usage_report, format_usage_from_file
+from py_models.base import LLMReport
 from pydantic_ai.usage import Usage
 from pydantic import BaseModel # Needed for LLMReport
 
@@ -34,11 +34,11 @@ class TestUsageTracker(unittest.TestCase):
 
         # Patch the UsageTracker to use the dummy file path
         # This is necessary to prevent it from trying to load/save the actual usage.json
-        patcher_config_path = patch('src.helpers.usage_tracker.UsageTracker.config_path', new=str(TEST_USAGE_FILE_PATH))
+        patcher_config_path = patch('helpers.usage_tracker.UsageTracker.config_path', new=str(TEST_USAGE_FILE_PATH))
         self.mock_config_path = patcher_config_path.start()
 
         # Patch datetime.now to control the current date/time for testing
-        patcher_datetime_now = patch('src.helpers.usage_tracker.datetime')
+        patcher_datetime_now = patch('helpers.usage_tracker.datetime')
         self.mock_datetime = patcher_datetime_now.start()
         self.mock_datetime.now.return_value = datetime(2023, 10, 26, 12, 0, 0) # Set a fixed date/time
         self.mock_datetime.strftime = datetime.strftime # Allow strftime to work on the mock
@@ -389,7 +389,7 @@ class TestUsageTracker(unittest.TestCase):
     def test_print_usage_report(self, mock_print):
         # Just test that it calls format_usage_data and prints the result
         sample_data = {"usage_today": 0.1} # Minimal data
-        with patch('src.helpers.usage_tracker.format_usage_data', return_value="Formatted Report") as mock_format:
+        with patch('helpers.usage_tracker.format_usage_data', return_value="Formatted Report") as mock_format:
             print_usage_report(sample_data)
             mock_format.assert_called_once_with(sample_data)
             mock_print.assert_called_once_with("Formatted Report")

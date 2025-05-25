@@ -9,7 +9,7 @@ from helpers.cli_helper_functions import flag_non_working_models, flag_file_capa
 from helpers.config_helper import ConfigHelper
 from helpers.llm_info_provider import LLMInfoProvider
 from helpers.usage_tracker import UsageTracker, format_usage_data
-from tests.helpers import test_hello_world, test_weather, test_file_analysis
+from helpers.test_helpers_utils import test_hello_world, test_weather, test_file_analysis
 
 # check command line flags
 parser = argparse.ArgumentParser()

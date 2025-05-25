@@ -1,7 +1,7 @@
 import unittest
 
 # Assuming the PromptProvider class is in src/prompt_providers/prompt_provider.py
-from src.prompt_providers.prompt_provider import PromptProvider
+from prompt_providers.prompt_provider import PromptProvider
 
 class TestPromptProvider(unittest.TestCase):
 

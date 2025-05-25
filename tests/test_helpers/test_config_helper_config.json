@@ -1,0 +1,28 @@
+{
+    "defaults": {
+        "model": "default_model_1"
+    },
+    "daily_limits": {
+        "per_model": {
+            "model_a": 100
+        },
+        "per_service": {
+            "service_x": 500
+        }
+    },
+    "monthly_limits": {
+        "per_model": {
+            "model_b": 1000
+        },
+        "per_service": {
+            "service_y": 5000
+        }
+    },
+    "model_mappings": {
+        "alias_a": "model_a"
+    },
+    "excluded_models": [
+        "model_c"
+    ],
+    "mode": "strict"
+}
