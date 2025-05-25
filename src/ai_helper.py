@@ -17,6 +17,7 @@ from dotenv import load_dotenv
 from pydantic_ai.providers.openrouter import OpenRouterProvider
 
 from helpers.llm_info_provider import LLMInfoProvider
+from helpers.usage_tracker import UsageTracker
 from py_models.base import LLMReport
 from py_models.hello_world.model import Hello_worldModel
 
@@ -38,25 +39,29 @@ class AiHelper:
         self.open_router = OpenAIModel('gpt-4o', provider=OpenAIProvider(api_key=open_router))
 
         self.info_provider = LLMInfoProvider()
+        self.usage_tracker = UsageTracker()
 
     """
     Do the actual request and generate cost report + cost info + save whatever needs to be saved
     """
-    def get_result(self, prompt: str, pydantic_model, model_name: str = 'deepseek/deepseek-prover-v2:free', file: Optional[Union[str, Path]] = None, provider='open_router', tools: list = None) -> Tuple[T, LLMReport] | Tuple[None, None]:
+    def get_result(self, prompt: str, pydantic_model, llm_model_name: str = 'deepseek/deepseek-prover-v2:free', file: Optional[Union[str, Path]] = None, provider='open_router', tools: list = None) -> Tuple[T, LLMReport] | Tuple[None, None]:
 
-        if '/' not in model_name:
-            raise ValueError(f"Model name '{model_name}' must be in the format 'provider/model_name'.")
+        if '/' not in llm_model_name:
+            raise ValueError(f"Model name '{llm_model_name}' must be in the format 'provider/model_name'.")
 
-        llm_provider = self._get_llm_provider(provider, model_name)
+        if tools is None:
+            tools = []
+
+        llm_provider = self._get_llm_provider(provider, llm_model_name)
         agent = Agent(llm_provider, output_type=pydantic_model, instrument=True, tools=tools)
         agent_output = agent.run_sync(prompt)
         result = agent_output.output
-        return result, self._post_process(agent_output, model_name)
+        return result, self._post_process(agent_output, llm_model_name, provider, pydantic_model.__class__.__name__)
 
     """
     Usage data calculation. Save hooks for reporting.
     """
-    def _post_process(self, agent_result: AgentRunResult, model_name) -> LLMReport:
+    def _post_process(self, agent_result: AgentRunResult, model_name: str, provider: str, pydantic_model_name: str) -> LLMReport:
         report = LLMReport(
             model_name=model_name,
             usage=agent_result.usage(),
@@ -70,6 +75,8 @@ class AiHelper:
 
         report.cost = self.info_provider.get_cost_info(model_name, agent_result.usage())
         report.fill_percentage = percentage
+
+        self.usage_tracker.add_usage(report, service=provider, model_name=model_name,pydantic_model_name=pydantic_model_name)
         return report
 
     def _get_llm_provider(self, name: str, model_name: str) -> Any:

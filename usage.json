@@ -1,0 +1,31 @@
+{
+    "usage_today": 0.00002144,
+    "usage_this_month": 0.00002144,
+    "daily_usage": [
+        {
+            "month": "2025-05",
+            "day": "2025-05-25",
+            "model": "mistralai/ministral-3b",
+            "service": "open_router",
+            "input_tokens": 478,
+            "output_tokens": 58,
+            "total_tokens": 536,
+            "requests": 2,
+            "cost": 0.00002144
+        }
+    ],
+    "fill_percentage_by_pydantic_model": {
+        "ModelMetaclass": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        }
+    },
+    "fill_percentage_by_llm_model": {
+        "mistralai/ministral-3b": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        }
+    }
+}
