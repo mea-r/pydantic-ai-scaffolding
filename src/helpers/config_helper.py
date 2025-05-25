@@ -33,6 +33,9 @@ class ConfigHelper:
         with open(self.config_path, 'w') as f:
             json.dump(self.configuration.model_dump(), f, indent=4)
 
+    def get_config(self, key: str) -> Any:
+        return getattr(self.configuration, key, None)
+
     def append_config(self, key: str, value: Any):
         setattr(self.configuration, key, value)
         self._save()

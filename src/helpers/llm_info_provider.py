@@ -4,12 +4,15 @@ import time
 import requests
 from pydantic_ai.usage import Usage
 
+from helpers.config_helper import ConfigHelper
+
 
 class LLMInfoProvider:
     def __init__(self):
         self._total_cost = 0
         self._cost_info = {}
         self._init_cost_info()
+        self.config = ConfigHelper()
 
     """
     FORMAT:
@@ -69,7 +72,7 @@ class LLMInfoProvider:
     
     """
 
-    def _get_models_data(self) -> list:
+    def _get_models_data(self, include_excluded=False) -> list:
         cache_file = "models.json"
         if not os.path.exists(cache_file):
             self._init_cost_info()
@@ -77,13 +80,24 @@ class LLMInfoProvider:
         with open(cache_file, 'r') as f:
             data = json.load(f)
 
-        return data['data']
+        models = data.get('data', [])
 
-    def get_models(self) -> list:
+        if not include_excluded:
+            excluded_models = self.config.get_config('excluded_models')
+            models = [model for model in models if model['id'] not in excluded_models]
+
+        return models
+
+    def get_models(self, include_excluded=False) -> list:
         """
         Returns a list of all available models.
         """
         models = self._get_models_data()
+
+        if not include_excluded:
+            excluded_models = self.config.get_config('excluded_models')
+            models = [model for model in models if model['id'] not in excluded_models]
+
         return [model['id'] for model in models]
 
     def get_price_list(self) -> dict:
@@ -135,6 +149,12 @@ class LLMInfoProvider:
                 color = "\033[91m"
             # print the model id and prices
             print(f"{color}{model_id:<60}\033[0m {prices['price_category']:<15} {prices['prompt']:<20} {prices['completion']:<20} {prices['request']:<20} {prices['image']:<20} {prices['web_search']:<20} {prices['internal_reasoning']:<20} {prices['input_cache_read']:<20} {prices['input_cache_write']:<20}")
+
+        total_models = len(self._get_models_data(include_excluded=True))
+        usable_models = len(price_list)
+        print(f"\n\n{'Total models':<40}", total_models)
+        print(f"{'Excluded due to poor tool usage':<40}", total_models-usable_models)
+        print(f"{'Usable models':<40}", usable_models)
 
 
     def get_cheapest_model(self) -> str:
