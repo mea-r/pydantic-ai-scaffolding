@@ -5,7 +5,7 @@ import argparse
 from pydantic.v1.typing import get_args
 
 from ai_helper import AiHelper
-from helpers.cli_helper_functions import flag_non_working_models
+from helpers.cli_helper_functions import flag_non_working_models, flag_file_capable_models
 from helpers.config_helper import ConfigHelper
 from helpers.llm_info_provider import LLMInfoProvider
 from helpers.usage_tracker import UsageTracker, format_usage_data
@@ -14,6 +14,7 @@ from tests.helpers import test_hello_world, test_weather, test_file_analysis
 # check command line flags
 parser = argparse.ArgumentParser()
 parser.add_argument('--update_non_working', nargs='*', help='Updates non-working models in the config file')
+parser.add_argument('--test_file_capability', nargs='*', help='Test file capability and update file_capable_models in config')
 parser.add_argument('--simple_test', nargs='*', help='Run a simple test case without tool calling')
 parser.add_argument('--test_tools', nargs='*', help='Run a test case with tool calling')
 parser.add_argument('--test_file', nargs='*', help='Run a test case with file analysis')
@@ -28,6 +29,11 @@ if args.update_non_working is not None:
     # if the flag is set, we will update the non-working models in the config file
     print("Updating non-working models in the config file...")
     flag_non_working_models()
+
+if args.test_file_capability is not None:
+    # if the flag is set, we will test file capability and update file_capable_models in the config file
+    print("Testing file capability and updating file_capable_models in the config file...")
+    flag_file_capable_models()
 
 if args.simple_test is not None:
     ## test case with tool calling

@@ -24,4 +24,6 @@ class FileAnalysisModel(BasePyModel):
 
     # Define model fields
     text_content: str = Field(..., description="The full text content extracted from the file")
-    content_summary: str = Field(..., description="A concise summary of the file's main content and purpose")
+    key: str = Field(..., description="There is a key inside that you are supposed to find")
+    value: str = Field(..., description="There is a value inside that you are supposed to find")
+3.

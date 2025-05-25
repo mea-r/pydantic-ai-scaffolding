@@ -12,7 +12,7 @@ from pydantic_ai.usage import Usage
 from pydantic import BaseModel # Needed for LLMReport
 
 # Define a dummy usage file path for testing
-TEST_USAGE_FILE_PATH = Path(__file__).parent / 'test_usage.json'
+TEST_USAGE_FILE_PATH = Path(__file__).parent / 'logs/test_usage.json'
 
 # Initial content for the dummy usage file (empty structure)
 INITIAL_USAGE_CONTENT = {

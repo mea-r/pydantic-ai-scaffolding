@@ -302,9 +302,9 @@ class HelperUsage(BaseModel):
 class UsageTracker:
     def __init__(self, base_path: Optional[str] = None):
         if base_path is None:
-            self.config_path = os.path.join(os.path.dirname(__file__), '../../usage.json')
+            self.config_path = os.path.join(os.path.dirname(__file__), '../../logs/usage.json')
         else:
-            self.config_path = os.path.join(base_path, 'usage.json')
+            self.config_path = os.path.join(base_path, 'logs/usage.json')
 
         if not os.path.exists(self.config_path):
             self._create_empty_usage_file()

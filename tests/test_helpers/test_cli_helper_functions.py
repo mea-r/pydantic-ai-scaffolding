@@ -13,7 +13,7 @@ from pydantic_ai.usage import Usage
 
 # Define a dummy config file path for testing
 TEST_CONFIG_PATH = Path(__file__).parent / 'test_config.json'
-TEST_REPORT_FILE = Path(__file__).parent / 'test_tool_call_errors.txt'
+TEST_REPORT_FILE = Path(__file__).parent / 'logs/test_tool_call_errors.txt'
 
 # Initial content for the dummy config file
 INITIAL_CONFIG_CONTENT = {
