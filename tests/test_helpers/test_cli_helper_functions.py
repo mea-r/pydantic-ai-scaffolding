@@ -69,10 +69,6 @@ class TestCliHelperFunctions(unittest.TestCase):
             'openai/o4-mini-high' # Model to start from
         ]
 
-        # Patch the report file path
-        patcher_report_file = patch('helpers.cli_helper_functions.report_file', new=str(TEST_REPORT_FILE))
-        self.mock_report_file = patcher_report_file.start()
-
         # Patch print to capture output
         patcher_print = patch('builtins.print')
         self.mock_print = patcher_print.start()
@@ -126,8 +122,8 @@ class TestCliHelperFunctions(unittest.TestCase):
         patch.stopall()
 
     def test_flag_non_working_models(self):
-        # Run the function
-        flag_non_working_models()
+        # Run the function, passing the test report file path
+        flag_non_working_models(report_file_path=str(TEST_REPORT_FILE))
 
         # Assertions
 

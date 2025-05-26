@@ -1,8 +1,0 @@
-{
-    "usage_today": 0.0,
-    "usage_this_month": 0.0,
-    "daily_usage": [],
-    "daily_tool_usage": [],
-    "fill_percentage_by_pydantic_model": {},
-    "fill_percentage_by_llm_model": {}
-}

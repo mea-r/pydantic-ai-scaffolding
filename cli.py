@@ -42,14 +42,29 @@ if args.simple_test is not None:
     print(report.model_dump_json(indent=4))
 
 if args.test_tools is not None:
-    result, report = test_weather()
-    print(result.model_dump_json(indent=4))
-    print(report.model_dump_json(indent=4))
+    if 'all' in args.test_tools:
+        info = LLMInfoProvider()
+        for model in info.get_models():
+            result, report = test_hello_world(model_name=model)
+            print(f"Model: {model}")
+            print(result.model_dump_json(indent=4))
+            print(report.model_dump_json(indent=4))
+    else:
+        result, report = test_weather()
+        print(result.model_dump_json(indent=4))
+        print(report.model_dump_json(indent=4))
 
 if args.test_file is not None:
-    result, report = test_file_analysis()
-    print(result.model_dump_json(indent=4))
-    print(report.model_dump_json(indent=4))
+    if 'all' in args.test_tools:
+        info = LLMInfoProvider()
+        for model in info.get_models():
+            result, report = test_file_analysis(model_name=model)
+            print(result.model_dump_json(indent=4))
+            print(report.model_dump_json(indent=4))
+    else:
+        result, report = test_file_analysis()
+        print(result.model_dump_json(indent=4))
+        print(report.model_dump_json(indent=4))
 
 if args.usage is not None:
     usage_tracker = UsageTracker()

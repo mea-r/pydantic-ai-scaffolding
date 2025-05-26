@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 # Assuming the ConfigHelper class is in src/helpers/config_helper.py
-from helpers.config_helper import ConfigHelper, Config, Defaults, LimitConfig
+from src.helpers.config_helper import ConfigHelper, Config, Defaults, LimitConfig
 
 # Define a dummy config file path for testing
 TEST_CONFIG_PATH = Path(__file__).parent / 'test_config_helper_config.json'
@@ -16,6 +16,7 @@ INITIAL_CONFIG_CONTENT = {
     "daily_limits": {"per_model": {"model_a": 100}, "per_service": {"service_x": 500}},
     "monthly_limits": {"per_model": {"model_b": 1000}, "per_service": {"service_y": 5000}},
     "model_mappings": {"alias_a": "model_a"},
+    "file_capable_models": [],
     "excluded_models": ["model_c"],
     "mode": "strict"
 }
@@ -28,11 +29,11 @@ class TestConfigHelper(unittest.TestCase):
         with open(TEST_CONFIG_PATH, 'w') as f:
             json.dump(INITIAL_CONFIG_CONTENT, f, indent=4)
 
-        # Patch the ConfigHelper to use the dummy config file path
+        # Patch the path.join to use the dummy config file path
         # This is necessary to prevent the ConfigHelper from trying to load
         # the actual config.json in the project root during testing.
-        patcher_config_path = patch('helpers.config_helper.ConfigHelper.config_path', new=str(TEST_CONFIG_PATH))
-        self.mock_config_path = patcher_config_path.start()
+        patcher_path_join = patch('src.helpers.config_helper.path.join', return_value=str(TEST_CONFIG_PATH))
+        self.mock_path_join = patcher_path_join.start()
 
 
     def tearDown(self):

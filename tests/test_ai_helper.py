@@ -9,6 +9,7 @@ from ai_helper import AiHelper
 from py_models.base import LLMReport
 from py_models.file_analysis.model import FileAnalysisModel
 from pydantic_ai.agent import AgentRunResult
+from pydantic_ai.messages import ModelResponse, ToolCallPart
 from pydantic_ai.usage import Usage
 from pydantic import BaseModel
 from pathlib import Path
@@ -224,24 +225,25 @@ class TestAiHelper(unittest.TestCase):
         self.assertIn("File not found: non_existent_file.pdf", str(cm.exception))
 
     @patch('ai_helper.Agent')
-    @patch('ai_helper.Path')
+    @patch('pathlib.Path') # Patch pathlib.Path globally for this test
     def test_file_analysis_with_file(self, MockPath, MockAgent):
         """Test file analysis with a valid file"""
         # Mock file operations
         mock_path_instance = MockPath.return_value
         mock_path_instance.exists.return_value = True
         mock_path_instance.read_bytes.return_value = b'fake pdf content'
-        
+
         # Mock mimetypes
         with patch('ai_helper.mimetypes.guess_type') as mock_guess_type:
             mock_guess_type.return_value = ('application/pdf', None)
-            
+
             # Mock agent
             mock_agent_instance = MockAgent.return_value
             mock_agent_run_result = MagicMock(spec=AgentRunResult)
             mock_agent_run_result.output = FileAnalysisModel(
-                text_content="Sample PDF content", 
-                content_summary="This is a test PDF file"
+                text_content="Sample PDF content",
+                key="test_key",
+                value="test_value"
             )
             mock_agent_run_result.usage.return_value = Usage(request_tokens=10, response_tokens=20, total_tokens=30, requests=1)
             mock_agent_run_result.all_messages.return_value = []
@@ -258,14 +260,17 @@ class TestAiHelper(unittest.TestCase):
                 provider = 'openai'
                 file_path = 'test.pdf'
 
-                result, report = self.ai_helper.get_result(prompt, pydantic_model, llm_model_name, 
+                # Pass the file_path string directly, as Path() will be mocked
+                result, report = self.ai_helper.get_result(prompt, pydantic_model, llm_model_name,
                                                          provider=provider, file=file_path)
 
-                # Verify file operations
+                # Verify file operations - MockPath should be called with the file_path string
                 MockPath.assert_called_with(file_path)
                 mock_path_instance.exists.assert_called_once()
                 mock_path_instance.read_bytes.assert_called_once()
-                mock_guess_type.assert_called_once_with('test.pdf')
+                # mimetypes.guess_type is called with the mock Path instance
+                mock_guess_type.assert_called_once_with(mock_path_instance)
+
 
                 # Verify agent was called with file content
                 expected_prompt = [
@@ -279,7 +284,8 @@ class TestAiHelper(unittest.TestCase):
 
                 # Verify result
                 self.assertEqual(result.text_content, "Sample PDF content")
-                self.assertEqual(result.content_summary, "This is a test PDF file")
+                self.assertEqual(result.key, "test_key")
+                self.assertEqual(result.value, "test_value")
 
     @patch('ai_helper.Agent')  
     def test_file_analysis_without_file(self, MockAgent):

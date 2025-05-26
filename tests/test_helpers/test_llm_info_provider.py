@@ -6,8 +6,8 @@ from unittest.mock import patch, MagicMock
 from pathlib import Path
 
 # Assuming the LLMInfoProvider class is in src/helpers/llm_info_provider.py
-from helpers.llm_info_provider import LLMInfoProvider
-from helpers.config_helper import ConfigHelper
+from src.helpers.llm_info_provider import LLMInfoProvider
+from src.helpers.config_helper import ConfigHelper
 from pydantic_ai.usage import Usage
 
 # Define dummy file paths for testing
@@ -82,18 +82,27 @@ class TestLLMInfoProvider(unittest.TestCase):
 
 
         # Patch file paths and requests.get to avoid external dependencies
-        patcher_models_json_path = patch('helpers.llm_info_provider.cache_file', new=str(TEST_MODELS_JSON_PATH))
-        self.mock_models_json_path = patcher_models_json_path.start()
+        # Patch file paths and requests.get to avoid external dependencies
+        # Patch file paths and requests.get to avoid external dependencies
+        patcher_os_path_exists = patch('src.helpers.llm_info_provider.os.path.exists')
+        self.mock_os_path_exists = patcher_os_path_exists.start()
+        # Ensure os.path.exists returns True for both dummy models.json and config.json paths
+        self.mock_os_path_exists.side_effect = lambda path: (path == str(TEST_MODELS_JSON_PATH) or path == str(TEST_CONFIG_PATH)) and os.path.exists(path)
 
-        patcher_model_mappings_path = patch('helpers.llm_info_provider.path', new=str(TEST_MODEL_MAPPINGS_JSON_PATH.parent))
-        self.mock_model_mappings_path = patcher_model_mappings_path.start()
+        patcher_open = patch('src.helpers.llm_info_provider.open', create=True)
+        self.mock_open = patcher_open.start()
+        # Ensure open can handle both dummy models.json and config.json paths
+        self.mock_open.side_effect = lambda path, mode='r': open(str(TEST_MODELS_JSON_PATH) if 'models.json' in path else str(TEST_CONFIG_PATH) if 'config.json' in path else path, mode)
 
-        patcher_config_helper_path = patch('helpers.config_helper.ConfigHelper.config_path', new=str(TEST_CONFIG_PATH))
+        patcher_os_path_dirname = patch('src.helpers.llm_info_provider.os.path.dirname', return_value=str(TEST_MODEL_MAPPINGS_JSON_PATH.parent))
+        self.mock_os_path_dirname = patcher_os_path_dirname.start()
+
+        patcher_config_helper_path = patch('src.helpers.config_helper.path.join', return_value=str(TEST_CONFIG_PATH))
         self.mock_config_helper_path = patcher_config_helper_path.start()
 
 
         # Patch requests.get to prevent actual API calls
-        patcher_requests_get = patch('helpers.llm_info_provider.requests.get')
+        patcher_requests_get = patch('src.helpers.llm_info_provider.requests.get')
         self.mock_requests_get = patcher_requests_get.start()
         # Configure the mock to return dummy data if called
         mock_response = MagicMock()
@@ -103,7 +112,7 @@ class TestLLMInfoProvider(unittest.TestCase):
 
 
         # Patch time.time() to control caching behavior
-        patcher_time = patch('helpers.llm_info_provider.time.time')
+        patcher_time = patch('src.helpers.llm_info_provider.time.time')
         self.mock_time = patcher_time.start()
         self.mock_time.return_value = time.time() # Return current time by default
 

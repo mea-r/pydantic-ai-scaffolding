@@ -47,6 +47,7 @@ class AiHelper:
     Do the actual request and generate cost report + cost info + save whatever needs to be saved
     """
     def get_result(self, prompt: str, pydantic_model, llm_model_name: str = 'deepseek/deepseek-prover-v2:free', file: Optional[Union[str, Path]] = None, provider='open_router', tools: list = None) -> Tuple[T, LLMReport] | Tuple[None, None]:
+        print(f"DEBUG: get_result received file: {file}, type: {type(file)}") # Debug print
 
         if '/' not in llm_model_name:
             raise ValueError(f"Model name '{llm_model_name}' must be in the format 'provider/model_name'.")
@@ -73,6 +74,38 @@ class AiHelper:
         llm_provider = self._get_llm_provider(provider, llm_model_name)
         agent = Agent(llm_provider, output_type=pydantic_model, instrument=True, tools=tools)
         agent_output = agent.run_sync(user_prompt)
+        result = agent_output.output
+        return result, self._post_process(agent_output, llm_model_name, provider, pydantic_model.__name__)
+
+    async def get_result_async(self, prompt: str, pydantic_model, llm_model_name: str = 'deepseek/deepseek-prover-v2:free', file: Optional[Union[str, Path]] = None, provider='open_router', tools: list = None) -> Tuple[T, LLMReport] | Tuple[None, None]:
+        """
+        Async version of get_result for use within async contexts
+        """
+        if '/' not in llm_model_name:
+            raise ValueError(f"Model name '{llm_model_name}' must be in the format 'provider/model_name'.")
+
+        if tools is None:
+            tools = []
+
+        # Prepare user prompt with optional file attachment
+        if file:
+            file_path = Path(file)
+            if not file_path.exists():
+                raise FileNotFoundError(f"File not found: {file}")
+            
+            file_data = file_path.read_bytes()
+            media_type = mimetypes.guess_type(str(file_path))[0] or 'application/octet-stream'
+            
+            user_prompt = [
+                prompt,
+                BinaryContent(data=file_data, media_type=media_type)
+            ]
+        else:
+            user_prompt = prompt
+
+        llm_provider = self._get_llm_provider(provider, llm_model_name)
+        agent = Agent(llm_provider, output_type=pydantic_model, instrument=True, tools=tools)
+        agent_output = await agent.run(user_prompt)
         result = agent_output.output
         return result, self._post_process(agent_output, llm_model_name, provider, pydantic_model.__name__)
 
