@@ -1,6 +1,19 @@
 {
-    "defaults": {
-        "model": "open_router:mistralai/mistral-7b-instruct:free"
+    "default_models": {
+        "primary": {
+            "model": "openai/gpt-4o-mini",
+            "provider": "open_router"
+        },
+        "fallback_chain": [
+            {
+                "model": "openai/gpt-4o-mini",
+                "provider": "openai"
+            },
+            {
+                "model": "claude-3-haiku",
+                "provider": "anthropic"
+            }
+        ]
     },
     "daily_limits": {
         "per_model": {

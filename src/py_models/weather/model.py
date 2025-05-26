@@ -17,5 +17,5 @@ class WeatherModel(BasePyModel):
 
     # Define model fields - REPLACE WITH YOUR SCHEMA
     tool_results: Optional[dict] = Field(..., description="Results from tool calls")
-    haiku: Optional[str] = Field(..., description="Haiku about the weather")
-    report: Optional[str] = Field(..., description="Weather report, official")
+    haiku: str = Field(..., description="Haiku about the weather")
+    report: str = Field(..., description="Weather report, official")

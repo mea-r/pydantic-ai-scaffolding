@@ -23,11 +23,12 @@ def test_hello_world(model_name: str = 'mistralai/ministral-3b', provider='open_
     result, report = base.get_result(prompt, Hello_worldModel, llm_model_name=model_name, provider=provider)
     assert result is not None
     assert report is not None
+    return result, report
 
 
 def test_weather(model_name: str = 'openai/gpt-4.1', provider='openai'):
     base = AiHelper()
-    prompt = 'Please return the current weather and time in a form of a haiku. Location is Sofia, Bulgaria. Sofia needs to be used in the haiku.' \
+    prompt = 'Please return the current weather and time in a form of a haiku. Location is Sofia, Bulgaria. Sofia needs to be used in the haiku.'
 
     tools = [
         tool_get_weather,
@@ -37,6 +38,7 @@ def test_weather(model_name: str = 'openai/gpt-4.1', provider='openai'):
     result, report = base.get_result(prompt, WeatherModel, llm_model_name=model_name, provider=provider, tools=tools)
     assert result is not None
     assert report is not None
+    return result, report
 
 
 def test_file_analysis(model_name: str = 'openai/gpt-4o', provider='openai'):
@@ -47,3 +49,4 @@ def test_file_analysis(model_name: str = 'openai/gpt-4o', provider='openai'):
     result, report = base.get_result(prompt, FileAnalysisModel, llm_model_name=model_name, provider=provider, file=file_path)
     assert result is not None
     assert report is not None
+    return result, report

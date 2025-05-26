@@ -76,7 +76,7 @@ def list_available_agents():
         print(f"  - {agent_name}: {info.get('description', 'No description')}")
 
 
-async def main():
+async def main_agent_example():
     """Main async function to run examples"""
     print("🤖 Agent System Example")
     print("=" * 50)
@@ -92,4 +92,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(main_agent_example())

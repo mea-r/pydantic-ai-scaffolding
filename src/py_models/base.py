@@ -15,6 +15,8 @@ class LLMReport(BaseModel):
     usage: Optional[Usage] = Field(default_factory=Usage)
     cost: float = 0.0
     fill_percentage: int = 0
+    fallback_used: bool = False
+    attempted_models: List[str] = Field(default_factory=list)
 
 class BasePyModel(BaseModel):
     """

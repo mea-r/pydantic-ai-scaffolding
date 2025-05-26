@@ -2,8 +2,10 @@
 from pydantic import BaseModel
 from typing import List
 
+from py_models.base import BasePyModel
 
-class ProcessedFileContent(BaseModel):
+
+class ProcessedFileContent(BasePyModel):
     """Model for processed file content output"""
     extracted_text: str
     file_type: str
