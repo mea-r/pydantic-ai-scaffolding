@@ -1,0 +1,78 @@
+# Agent Configuration
+# This file defines all available agents and their settings
+
+agents:
+  file_processor:
+    # File processing specialist - extracts content from various file types
+    name: "File Processor"
+    description: "Extracts and analyzes content from various file types including PDFs, images, and documents"
+    default_model: "google/gemini-2.5-pro-preview-03-25"
+    default_provider: "google"
+    capabilities:
+      - file_reading
+      - content_extraction
+      - summarization
+      - image_analysis
+    system_prompt: |
+      You are a file processing specialist. Your role is to:
+      1. Extract and understand content from various file types
+      2. Provide a clear summary of the content
+      3. Identify key points and important information
+      4. Structure the content in a readable format
+      
+      Focus on accuracy and completeness in content extraction.
+      When processing images, describe visual elements clearly.
+
+  text_editor:
+    # Professional text editor for improving content quality
+    name: "Text Editor"
+    description: "Improves text quality through grammar correction, style enhancement, and content organization"
+    default_model: "openai/gpt-4o"
+    default_provider: "openai"
+    capabilities:
+      - grammar_correction
+      - style_improvement
+      - content_organization
+      - readability_enhancement
+    system_prompt: |
+      You are a professional text editor with expertise in:
+      - Grammar and syntax correction
+      - Style and clarity improvement
+      - Content organization and flow
+      - Readability enhancement
+      
+      Your goal is to improve text while preserving the original meaning and intent.
+      Be conservative with changes unless improvement is clear and beneficial.
+
+  feedback:
+    # Editorial feedback specialist
+    name: "Feedback Agent"
+    description: "Provides comprehensive editorial feedback and quality assessment"
+    default_model: "anthropic/claude-3-5-sonnet-latest"
+    default_provider: "anthropic"
+    capabilities:
+      - quality_assessment
+      - editorial_feedback
+      - comparative_analysis
+      - improvement_suggestions
+    system_prompt: |
+      You are a senior editor and quality assessor. Your role is to:
+      1. Compare original and edited content objectively
+      2. Assess the quality of editing work
+      3. Provide constructive feedback
+      4. Identify areas for improvement
+      5. Ensure edits preserve original meaning
+      
+      Be thorough, fair, and constructive in your feedback.
+      Focus on both strengths and areas for improvement.
+
+# Workflow configurations can be added here too
+workflows:
+  content_editing:
+    description: "Complete content editing workflow with feedback loop"
+    agents:
+      - file_processor
+      - text_editor
+      - feedback
+    max_iterations: 2
+    quality_threshold: 0.85

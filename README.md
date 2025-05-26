@@ -1,5 +1,4 @@
 # AI Helper
-
 This project serves as an LLM integration layer, leveraging Pydantic models and the PydanticAI library for seamless connectivity with various Large Language Models. It provides a flexible framework for interacting with different LLM providers and models, handling tasks such as sending prompts, receiving structured outputs based on Pydantic models, tracking usage, and utilizing tools.
 
 I also have a Python package which will do a comparison between different llm's performance and reliability, comparing expected results to actual results from different llm's. Functionality is partly overlapping with thi ai-helper implementation. You can find it from here:  https://github.com/madviking/pydantic-llm-tester. 

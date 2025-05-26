@@ -5,7 +5,7 @@ import requests
 from pydantic_ai.usage import Usage
 from tabulate import tabulate
 
-from helpers.config_helper import ConfigHelper
+from .config_helper import ConfigHelper
 
 
 class LLMInfoProvider:
