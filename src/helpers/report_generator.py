@@ -20,7 +20,7 @@ from pydantic_ai.models.google import GoogleModel
 from pydantic_ai.providers.anthropic import AnthropicProvider
 from dotenv import load_dotenv
 
-from llm_info_provider import LLMInfoProvider
+from .llm_info_provider import LLMInfoProvider
 from py_models.base import LLMReport
 from py_models.hello_world.model import Hello_worldModel
 

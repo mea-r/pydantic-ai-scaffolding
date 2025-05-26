@@ -13,19 +13,9 @@ from decimal import Decimal
 import re
 from collections import defaultdict
 
-from pydantic_ai import Agent  # Keep if needed, but not directly used in this file
-from pydantic_ai.agent import AgentRunResult  # Keep if needed
-from pydantic_ai.providers.google import GoogleProvider  # Keep if needed
 from pydantic import BaseModel, Field
 
-from pydantic_ai.models.openai import OpenAIModel  # Keep if needed
-from pydantic_ai.providers.openai import OpenAIProvider  # Keep if needed
-from pydantic_ai.models.anthropic import AnthropicModel  # Keep if needed
-from pydantic_ai.models.google import GoogleModel  # Keep if needed
-from pydantic_ai.providers.anthropic import AnthropicProvider  # Keep if needed
-from dotenv import load_dotenv  # Keep if needed
-
-from py_models.base import LLMReport  # Assuming this is your local structure
+from src.py_models.base import LLMReport
 from pydantic_ai.usage import Usage
 from tabulate import tabulate
 
@@ -140,8 +130,8 @@ def format_usage_data(data: Dict[str, Any]) -> str:
         for model_name, stats_obj in data['fill_percentage_by_pydantic_model'].items():
             pydantic_data.append([
                 model_name,
-                f"{stats_obj.average:.2f}%" if stats_obj else "0.00%",  # Accessing object attribute
-                stats_obj.count if stats_obj else 0
+                f"{stats_obj.average:.2f}%" if hasattr(stats_obj, 'average') else "0.00%",  # Accessing object attribute
+                stats_obj.count if hasattr(stats_obj, 'count') else 0
             ])
         output.append(tabulate(pydantic_data, headers=['Pydantic Model', 'Avg Fill %', 'Samples'], tablefmt='grid'))
         output.append("")
@@ -153,8 +143,8 @@ def format_usage_data(data: Dict[str, Any]) -> str:
         for model_name, stats_obj in data['fill_percentage_by_llm_model'].items():
             llm_data.append([
                 model_name,
-                f"{stats_obj.average:.2f}%" if stats_obj else "0.00%",  # Accessing object attribute
-                stats_obj.count if stats_obj else 0
+                f"{stats_obj.average:.2f}%" if hasattr(stats_obj, 'average') else "0.00%",  # Accessing object attribute
+                stats_obj.count if hasattr(stats_obj, 'count') else 0
             ])
         output.append(tabulate(llm_data, headers=['LLM Model', 'Avg Fill %', 'Samples'], tablefmt='grid'))
         output.append("")
@@ -169,7 +159,7 @@ def format_usage_data(data: Dict[str, Any]) -> str:
         for model, stats in sorted_models:
             # Get fill percentage for this model
             fill_stats = data.get('fill_percentage_by_llm_model', {}).get(model)
-            avg_fill_percentage = f"{fill_stats.average:.2f}%" if fill_stats else "N/A"
+            avg_fill_percentage = f"{fill_stats.average:.2f}%" if fill_stats and hasattr(fill_stats, 'average') else "N/A"
 
             model_data.append([
                 model,
@@ -302,9 +292,9 @@ class HelperUsage(BaseModel):
 class UsageTracker:
     def __init__(self, base_path: Optional[str] = None):
         if base_path is None:
-            self.config_path = os.path.join(os.path.dirname(__file__), '../../usage.json')
+            self.config_path = os.path.join(os.path.dirname(__file__), '../../logs/usage.json')
         else:
-            self.config_path = os.path.join(base_path, 'usage.json')
+            self.config_path = os.path.join(base_path, 'logs/usage.json')
 
         if not os.path.exists(self.config_path):
             self._create_empty_usage_file()
@@ -451,9 +441,33 @@ class UsageTracker:
         summary['usage_today'] = self.get_usage_today()
         summary['usage_this_month'] = self.get_usage_this_month()
 
-        # For daily tables in formatter
-        summary['daily_usage'] = [item.model_dump() for item in self.usage_data.daily_usage]
-        summary['daily_tool_usage'] = [item.model_dump() for item in self.usage_data.daily_tool_usage]
+        # --- Daily Summaries (Aggregated for Report) ---
+        # Aggregate daily LLM usage by day, model, service, and pydantic model
+        daily_llm_summary_aggregated = defaultdict(
+            lambda: {'day': '', 'model': '', 'service': '', 'pydantic_model_name': '', 'requests': 0, 'input_tokens': 0, 'output_tokens': 0, 'total_tokens': 0, 'cost': 0.0})
+        for item in self.usage_data.daily_usage:
+            key = (item.day, item.model, item.service, item.pydantic_model_name)
+            daily_llm_summary_aggregated[key]['day'] = item.day
+            daily_llm_summary_aggregated[key]['model'] = item.model
+            daily_llm_summary_aggregated[key]['service'] = item.service
+            daily_llm_summary_aggregated[key]['pydantic_model_name'] = item.pydantic_model_name
+            daily_llm_summary_aggregated[key]['requests'] += item.requests
+            daily_llm_summary_aggregated[key]['input_tokens'] += item.input_tokens
+            daily_llm_summary_aggregated[key]['output_tokens'] += item.output_tokens
+            daily_llm_summary_aggregated[key]['total_tokens'] += item.total_tokens
+            daily_llm_summary_aggregated[key]['cost'] += item.cost
+        summary['daily_usage'] = list(daily_llm_summary_aggregated.values())
+
+
+        # Aggregate daily tool usage by day and tool name
+        daily_tool_summary_aggregated = defaultdict(lambda: {'day': '', 'tool_name': '', 'calls': 0})
+        for item in self.usage_data.daily_tool_usage:
+            key = (item.day, item.tool_name)
+            daily_tool_summary_aggregated[key]['day'] = item.day
+            daily_tool_summary_aggregated[key]['tool_name'] = item.tool_name
+            daily_tool_summary_aggregated[key]['calls'] += item.calls
+        summary['daily_tool_usage'] = list(daily_tool_summary_aggregated.values())
+
 
         # --- Monthly Summaries ---
         monthly_llm_summary = defaultdict(

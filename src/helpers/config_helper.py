@@ -21,6 +21,7 @@ class Config(BaseModel):
     daily_limits: LimitConfig
     monthly_limits: LimitConfig
     model_mappings: Dict[str, str] = Field(default_factory=dict)
+    file_capable_models: List[str] = Field(default_factory=list)
     excluded_models: List[str] = Field(default_factory=list)
     mode: str = Field(default='strict', description="Strict = don't allow any model that fail custom tool calling. Loose = allow models that fail tool calling but are still usable for other tasks.")
 

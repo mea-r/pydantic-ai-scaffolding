@@ -1,0 +1,225 @@
+{
+    "usage_today": 0.10338180000000001,
+    "usage_this_month": 0.10338180000000001,
+    "daily_usage": [
+        {
+            "month": "2025-05",
+            "day": "2025-05-26",
+            "model": "google/gemini-2.5-pro-preview-03-25",
+            "service": "google",
+            "pydantic_model_name": "ProcessedFileContent",
+            "input_tokens": 608,
+            "output_tokens": 534,
+            "total_tokens": 4398,
+            "requests": 2,
+            "cost": 0.0
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-26",
+            "model": "openai/gpt-4o",
+            "service": "openai",
+            "pydantic_model_name": "EditedContent",
+            "input_tokens": 1139,
+            "output_tokens": 832,
+            "total_tokens": 1971,
+            "requests": 3,
+            "cost": 0.0111675
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-26",
+            "model": "anthropic/claude-3-5-sonnet-latest",
+            "service": "anthropic",
+            "pydantic_model_name": "EditingFeedback",
+            "input_tokens": 1822,
+            "output_tokens": 889,
+            "total_tokens": 2711,
+            "requests": 2,
+            "cost": 0.0
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-26",
+            "model": "mistralai/ministral-3b",
+            "service": "open_router",
+            "pydantic_model_name": "Hello_worldModel",
+            "input_tokens": 2380,
+            "output_tokens": 290,
+            "total_tokens": 2670,
+            "requests": 10,
+            "cost": 0.0001068
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-26",
+            "model": "openai/gpt-4.1",
+            "service": "openai",
+            "pydantic_model_name": "WeatherModel",
+            "input_tokens": 3805,
+            "output_tokens": 1152,
+            "total_tokens": 4957,
+            "requests": 20,
+            "cost": 0.0
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-26",
+            "model": "openai/gpt-4o",
+            "service": "openai",
+            "pydantic_model_name": "FileAnalysisModel",
+            "input_tokens": 3410,
+            "output_tokens": 584,
+            "total_tokens": 3994,
+            "requests": 10,
+            "cost": 0.014365000000000003
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-26",
+            "model": "google/gemini-2.0-flash-lite-001",
+            "service": "google",
+            "pydantic_model_name": "Hello_worldModel",
+            "input_tokens": 1710,
+            "output_tokens": 110,
+            "total_tokens": 1820,
+            "requests": 10,
+            "cost": 0.0
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-26",
+            "model": "anthropic/claude-3-haiku",
+            "service": "open_router",
+            "pydantic_model_name": "Hello_worldModel",
+            "input_tokens": 6010,
+            "output_tokens": 714,
+            "total_tokens": 6724,
+            "requests": 10,
+            "cost": 0.002395
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-26",
+            "model": "anthropic/claude-3-haiku-20240307",
+            "service": "anthropic",
+            "pydantic_model_name": "Hello_worldModel",
+            "input_tokens": 6120,
+            "output_tokens": 590,
+            "total_tokens": 6710,
+            "requests": 10,
+            "cost": 0.0022675
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-26",
+            "model": "openai/gpt-4",
+            "service": "openai",
+            "pydantic_model_name": "Hello_worldModel",
+            "input_tokens": 2000,
+            "output_tokens": 218,
+            "total_tokens": 2218,
+            "requests": 10,
+            "cost": 0.07308
+        }
+    ],
+    "daily_tool_usage": [
+        {
+            "month": "2025-05",
+            "day": "2025-05-26",
+            "tool_name": "final_result",
+            "calls": 77
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-26",
+            "tool_name": "tool_get_weather",
+            "calls": 10
+        },
+        {
+            "month": "2025-05",
+            "day": "2025-05-26",
+            "tool_name": "tool_get_human_date",
+            "calls": 10
+        }
+    ],
+    "fill_percentage_by_pydantic_model": {
+        "ProcessedFileContent": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "EditedContent": {
+            "average": 100.0,
+            "count": 3,
+            "sum_total": 300.0
+        },
+        "EditingFeedback": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "Hello_worldModel": {
+            "average": 100.0,
+            "count": 50,
+            "sum_total": 5000.0
+        },
+        "WeatherModel": {
+            "average": 62.7,
+            "count": 10,
+            "sum_total": 627.0
+        },
+        "FileAnalysisModel": {
+            "average": 100.0,
+            "count": 10,
+            "sum_total": 1000.0
+        }
+    },
+    "fill_percentage_by_llm_model": {
+        "google/gemini-2.5-pro-preview-03-25": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "openai/gpt-4o": {
+            "average": 100.0,
+            "count": 13,
+            "sum_total": 1300.0
+        },
+        "anthropic/claude-3-5-sonnet-latest": {
+            "average": 100.0,
+            "count": 2,
+            "sum_total": 200.0
+        },
+        "mistralai/ministral-3b": {
+            "average": 100.0,
+            "count": 10,
+            "sum_total": 1000.0
+        },
+        "openai/gpt-4.1": {
+            "average": 62.7,
+            "count": 10,
+            "sum_total": 627.0
+        },
+        "google/gemini-2.0-flash-lite-001": {
+            "average": 100.0,
+            "count": 10,
+            "sum_total": 1000.0
+        },
+        "anthropic/claude-3-haiku": {
+            "average": 100.0,
+            "count": 10,
+            "sum_total": 1000.0
+        },
+        "anthropic/claude-3-haiku-20240307": {
+            "average": 100.0,
+            "count": 10,
+            "sum_total": 1000.0
+        },
+        "openai/gpt-4": {
+            "average": 100.0,
+            "count": 10,
+            "sum_total": 1000.0
+        }
+    }
+}

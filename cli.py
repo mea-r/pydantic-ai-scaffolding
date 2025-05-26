@@ -5,17 +5,19 @@ import argparse
 from pydantic.v1.typing import get_args
 
 from ai_helper import AiHelper
-from helpers.cli_helper_functions import flag_non_working_models
+from helpers.cli_helper_functions import flag_non_working_models, flag_file_capable_models
 from helpers.config_helper import ConfigHelper
 from helpers.llm_info_provider import LLMInfoProvider
 from helpers.usage_tracker import UsageTracker, format_usage_data
-from tests.helpers import test_hello_world, test_weather
+from helpers.test_helpers_utils import test_hello_world, test_weather, test_file_analysis
 
 # check command line flags
 parser = argparse.ArgumentParser()
 parser.add_argument('--update_non_working', nargs='*', help='Updates non-working models in the config file')
+parser.add_argument('--test_file_capability', nargs='*', help='Test file capability and update file_capable_models in config')
 parser.add_argument('--simple_test', nargs='*', help='Run a simple test case without tool calling')
 parser.add_argument('--test_tools', nargs='*', help='Run a test case with tool calling')
+parser.add_argument('--test_file', nargs='*', help='Run a test case with file analysis')
 parser.add_argument('--prices', nargs='*', help='Outputs price information for LLM models')
 parser.add_argument('--prices_save', nargs='*', help='Saves price information for LLM models')
 parser.add_argument('--custom', nargs='*', help='Run your custom code')
@@ -28,6 +30,11 @@ if args.update_non_working is not None:
     print("Updating non-working models in the config file...")
     flag_non_working_models()
 
+if args.test_file_capability is not None:
+    # if the flag is set, we will test file capability and update file_capable_models in the config file
+    print("Testing file capability and updating file_capable_models in the config file...")
+    flag_file_capable_models()
+
 if args.simple_test is not None:
     ## test case with tool calling
     result, report = test_hello_world()
@@ -35,9 +42,29 @@ if args.simple_test is not None:
     print(report.model_dump_json(indent=4))
 
 if args.test_tools is not None:
-    result, report = test_weather()
-    print(result.model_dump_json(indent=4))
-    print(report.model_dump_json(indent=4))
+    if 'all' in args.test_tools:
+        info = LLMInfoProvider()
+        for model in info.get_models():
+            result, report = test_hello_world(model_name=model)
+            print(f"Model: {model}")
+            print(result.model_dump_json(indent=4))
+            print(report.model_dump_json(indent=4))
+    else:
+        result, report = test_weather()
+        print(result.model_dump_json(indent=4))
+        print(report.model_dump_json(indent=4))
+
+if args.test_file is not None:
+    if 'all' in args.test_file:
+        info = LLMInfoProvider()
+        for model in info.get_models():
+            result, report = test_file_analysis(model_name=model)
+            print(result.model_dump_json(indent=4))
+            print(report.model_dump_json(indent=4))
+    else:
+        result, report = test_file_analysis()
+        print(result.model_dump_json(indent=4))
+        print(report.model_dump_json(indent=4))
 
 if args.usage is not None:
     usage_tracker = UsageTracker()
