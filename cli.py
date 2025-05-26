@@ -55,7 +55,7 @@ if args.test_tools is not None:
         print(report.model_dump_json(indent=4))
 
 if args.test_file is not None:
-    if 'all' in args.test_tools:
+    if 'all' in args.test_file:
         info = LLMInfoProvider()
         for model in info.get_models():
             result, report = test_file_analysis(model_name=model)
