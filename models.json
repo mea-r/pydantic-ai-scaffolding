@@ -1,5 +1,5 @@
 {
-  "timestamp": 1748195294.1359098,
+  "timestamp": 1748269636.134617,
   "data": [
     {
       "id": "anthropic/claude-opus-4",
@@ -2332,7 +2332,7 @@
       "name": "Mistral: Mistral Small 3",
       "created": 1738255409,
       "description": "Mistral Small 3 is a 24B-parameter language model optimized for low-latency performance across common AI tasks. Released under the Apache 2.0 license, it features both pre-trained and instruction-tuned versions designed for efficient local deployment.\n\nThe model achieves 81% accuracy on the MMLU benchmark and performs competitively with larger models like Llama 3.3 70B and Qwen 32B, while operating at three times the speed on equivalent hardware. [Read the blog post about the model here.](https://mistral.ai/news/mistral-small-3/)",
-      "context_length": 28000,
+      "context_length": 32768,
       "architecture": {
         "modality": "text->text",
         "input_modalities": [
@@ -2345,7 +2345,7 @@
         "instruct_type": null
       },
       "pricing": {
-        "prompt": "0.00000005",
+        "prompt": "0.00000006",
         "completion": "0.00000012",
         "request": "0",
         "image": "0",
@@ -2353,8 +2353,8 @@
         "internal_reasoning": "0"
       },
       "top_provider": {
-        "context_length": 28000,
-        "max_completion_tokens": 14000,
+        "context_length": 32768,
+        "max_completion_tokens": 16384,
         "is_moderated": false
       },
       "per_request_limits": null,

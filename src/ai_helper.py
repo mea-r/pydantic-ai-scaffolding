@@ -88,6 +88,7 @@ class AiHelper:
         attempted_models, last_error = [], None
 
         for model_info in fallback_models:
+
             try:
                 model_name, provider = model_info['model'], model_info['provider']
                 attempted_models.append(f"{provider}/{model_name}")
@@ -116,7 +117,6 @@ class AiHelper:
             try:
                 model_name, provider = model_info['model'], model_info['provider']
                 attempted_models.append(f"{provider}/{model_name}")
-
                 llm_provider = self._get_llm_provider(provider, model_name)
                 agent = Agent(llm_provider, output_type=pydantic_model, instrument=True, tools=tools)
                 agent_output = await agent.run(user_prompt)
@@ -135,15 +135,26 @@ class AiHelper:
         raise Exception(f"All fallback models failed. Attempted: {attempted_models}. Last error: {str(last_error)}")
 
     def _build_fallback_chain(self, primary_model: str, primary_provider: str, agent_config: dict = None) -> List[dict]:
-        fallback_chain = [{'model': primary_model.split('/', 1)[-1], 'provider': primary_provider}]
+        # Handle primary model - keep full format for open_router, strip for others
+        primary_model_name = primary_model.split('/', 1)[-1] if primary_provider != 'open_router' else primary_model
+        fallback_chain = [{'model': primary_model_name, 'provider': primary_provider}]
 
         # Add agent-specific fallbacks
         if agent_config:
             if 'fallback_model' in agent_config and 'fallback_provider' in agent_config:
+                fallback_model = agent_config['fallback_model']
+                # Strip provider prefix if present, except for open_router
+                if '/' in fallback_model and agent_config['fallback_provider'] != 'open_router':
+                    fallback_model = fallback_model.split('/', 1)[-1]
                 fallback_chain.append(
-                    {'model': agent_config['fallback_model'], 'provider': agent_config['fallback_provider']})
+                    {'model': fallback_model, 'provider': agent_config['fallback_provider']})
 
-            fallback_chain.extend(agent_config.get('fallback_chain', []))
+            for fallback in agent_config.get('fallback_chain', []):
+                model = fallback['model']
+                # Strip provider prefix if present, except for open_router
+                if '/' in model and fallback['provider'] != 'open_router':
+                    model = model.split('/', 1)[-1]
+                fallback_chain.append({'model': model, 'provider': fallback['provider']})
 
         # Add system fallbacks
         try:
@@ -202,9 +213,7 @@ class AiHelper:
         model_class, provider_class, env_key = self.providers[name]
 
         # Handle model name formatting
-        if name != 'open_router':
-            model_name = model_name.split('/', 1)[-1]
-        elif not self.info_provider.get_model_info(model_name):
-            raise ValueError(f"Unknown model: {model_name}")
+        # if name == 'open_router' and not self.info_provider.get_model_info(model_name):
+        #     raise ValueError(f"Unknown model: {model_name}")
 
         return model_class(model_name, provider=provider_class(api_key=os.getenv(env_key)))
