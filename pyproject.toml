@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pydantic-llm-tester"
-version = "0.1.18"
-description = "A framework for testing LLM performance using pydanticAI"
+name = "pydantic-ai-scaffolding"
+version = "0.1.0"
+description = "A framework/scaffolding which makes it easier to integrate PydanticAI with various LLMs and tools. Includes also full fledged usage tracking and reporting."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { file = "LICENSE" }

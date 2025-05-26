@@ -22,7 +22,7 @@ async def example_workflow():
     workflow = ContentEditingWorkflow(ai_helper)
     
     # Run the workflow on a file
-    file_path = "example_document.txt"  # Replace with actual file
+    file_path = "tests/files/example_document.txt"  # Replace with actual file
     
     try:
         result = await workflow.run_and_display(file_path)
@@ -53,7 +53,7 @@ async def example_individual_agents():
     text_editor = registry.create_agent('text_editor', ai_helper)
     
     # Use them individually
-    file_path = "example_document.txt"
+    file_path = "tests/files/example_document.txt"
     
     print(f"📁 Processing file: {file_path}")
     # Process file

@@ -86,9 +86,11 @@ fi
 chmod +x src/pydantic_llm_tester/cli/main.py
 
 source venv/bin/activate
-pip install build
-python -m build
-pip install -e .
+
+# Uncomment to create a package upon installation
+#pip install build
+#python -m build
+#pip install -e .
 
 echo
 echo -e "${GREEN}LLM Tester installed successfully!${NC}"
