@@ -1,10 +1,16 @@
 import json
 from os import path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
+
+class FallbackModel(BaseModel):
+    model: str
+    provider: str
 
 class Defaults(BaseModel):
     model: str
+    fallback_model: Optional[str] = None
+    fallback_chain: List[FallbackModel] = Field(default_factory=list)
 
 class LimitConfig(BaseModel):
     per_model: Dict[str, int] = Field(default_factory=dict)
@@ -50,3 +56,21 @@ class ConfigHelper:
     @property
     def config(self) -> Config:
         return self.configuration
+
+    def get_fallback_model(self) -> Optional[str]:
+        """Get the system-wide fallback model"""
+        return self.configuration.defaults.fallback_model
+
+    def get_fallback_chain(self) -> List[FallbackModel]:
+        """Get the system-wide fallback chain"""
+        return self.configuration.defaults.fallback_chain
+
+    def parse_model_string(self, model_string: str) -> tuple[str, str]:
+        """Parse model string in format 'provider/model' or 'provider:model'"""
+        if '/' in model_string:
+            provider, model = model_string.split('/', 1)
+        elif ':' in model_string:
+            provider, model = model_string.split(':', 1)
+        else:
+            raise ValueError(f"Model string '{model_string}' must be in format 'provider/model' or 'provider:model'")
+        return provider, model

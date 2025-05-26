@@ -2,11 +2,12 @@ from typing import Any, Optional, Union, TypeVar, Tuple, List
 from datetime import datetime
 import uuid
 import os
+import mimetypes
 from pathlib import Path
 
 from pydantic_ai import Agent
 from pydantic_ai.agent import AgentRunResult
-from pydantic_ai.messages import ModelResponse, ToolCallPart
+from pydantic_ai.messages import ModelResponse, ToolCallPart, BinaryContent
 from pydantic_ai.providers.google import GoogleProvider
 
 from pydantic_ai.models.openai import OpenAIModel
@@ -19,6 +20,7 @@ from pydantic_ai.providers.openrouter import OpenRouterProvider
 
 from helpers.llm_info_provider import LLMInfoProvider
 from helpers.usage_tracker import UsageTracker
+from helpers.config_helper import ConfigHelper, FallbackModel
 from py_models.base import LLMReport
 from py_models.hello_world.model import Hello_worldModel
 
@@ -41,23 +43,194 @@ class AiHelper:
 
         self.info_provider = LLMInfoProvider()
         self.usage_tracker = UsageTracker()
+        self.config_helper = ConfigHelper()
 
     """
     Do the actual request and generate cost report + cost info + save whatever needs to be saved
     """
-    def get_result(self, prompt: str, pydantic_model, llm_model_name: str = 'deepseek/deepseek-prover-v2:free', file: Optional[Union[str, Path]] = None, provider='open_router', tools: list = None) -> Tuple[T, LLMReport] | Tuple[None, None]:
-
+    def get_result(self, prompt: str, pydantic_model, llm_model_name: str = 'deepseek/deepseek-prover-v2:free', file: Optional[Union[str, Path]] = None, provider='open_router', tools: list = None, agent_config: Optional[dict] = None) -> Tuple[T, LLMReport] | Tuple[None, None]:
+        """Execute request with fallback support"""
+        
         if '/' not in llm_model_name:
             raise ValueError(f"Model name '{llm_model_name}' must be in the format 'provider/model_name'.")
 
         if tools is None:
             tools = []
 
-        llm_provider = self._get_llm_provider(provider, llm_model_name)
-        agent = Agent(llm_provider, output_type=pydantic_model, instrument=True, tools=tools)
-        agent_output = agent.run_sync(prompt)
-        result = agent_output.output
-        return result, self._post_process(agent_output, llm_model_name, provider, pydantic_model.__name__)
+        # Prepare user prompt with optional file attachment
+        if file:
+            file_path = Path(file)
+            if not file_path.exists():
+                raise FileNotFoundError(f"File not found: {file}")
+            
+            file_data = file_path.read_bytes()
+            media_type = mimetypes.guess_type(str(file_path))[0] or 'application/octet-stream'
+            
+            user_prompt = [
+                prompt,
+                BinaryContent(data=file_data, media_type=media_type)
+            ]
+        else:
+            user_prompt = prompt
+
+        return self._execute_with_fallback(
+            user_prompt=user_prompt,
+            pydantic_model=pydantic_model,
+            primary_model=llm_model_name,
+            primary_provider=provider,
+            tools=tools,
+            agent_config=agent_config
+        )
+
+    def _execute_with_fallback(self, user_prompt, pydantic_model, primary_model: str, primary_provider: str, tools: list, agent_config: Optional[dict] = None) -> Tuple[T, LLMReport]:
+        """Execute request with fallback logic"""
+        
+        attempted_models = []
+        last_error = None
+        
+        # Build fallback chain
+        fallback_models = self._build_fallback_chain(primary_model, primary_provider, agent_config)
+        
+        for model_info in fallback_models:
+            try:
+                model_name, provider = model_info['model'], model_info['provider']
+                attempted_models.append(f"{provider}/{model_name}")
+                
+                llm_provider = self._get_llm_provider(provider, model_name)
+                agent = Agent(llm_provider, output_type=pydantic_model, instrument=True, tools=tools)
+                agent_output = agent.run_sync(user_prompt)
+                result = agent_output.output
+                
+                # Success! Update report with actual model used and fallback info
+                report = self._post_process(agent_output, f"{provider}/{model_name}", provider, pydantic_model.__name__)
+                report.attempted_models = attempted_models
+                report.fallback_used = len(attempted_models) > 1
+                
+                return result, report
+                
+            except Exception as e:
+                last_error = e
+                print(f"Model {model_info['model']} failed: {str(e)}")
+                continue
+        
+        # All models failed
+        raise Exception(f"All fallback models failed. Attempted: {attempted_models}. Last error: {str(last_error)}")
+
+    def _build_fallback_chain(self, primary_model: str, primary_provider: str, agent_config: Optional[dict] = None) -> List[dict]:
+        """Build the complete fallback chain for execution"""
+        
+        fallback_chain = []
+        
+        # 1. Primary model
+        primary_clean = primary_model.split('/', 1)[-1] if '/' in primary_model else primary_model
+        fallback_chain.append({'model': primary_clean, 'provider': primary_provider})
+        
+        # 2. Agent-specific fallbacks (if provided)
+        if agent_config:
+            if 'fallback_model' in agent_config and 'fallback_provider' in agent_config:
+                fallback_chain.append({
+                    'model': agent_config['fallback_model'],
+                    'provider': agent_config['fallback_provider']
+                })
+            
+            if 'fallback_chain' in agent_config:
+                for fallback in agent_config['fallback_chain']:
+                    fallback_chain.append(fallback)
+        
+        # 3. System-wide fallbacks
+        system_fallback = self.config_helper.get_fallback_model()
+        if system_fallback:
+            try:
+                provider, model = self.config_helper.parse_model_string(system_fallback)
+                fallback_chain.append({'model': model, 'provider': provider})
+            except ValueError:
+                print(f"Invalid system fallback model format: {system_fallback}")
+        
+        # 4. System-wide fallback chain
+        for fallback_model in self.config_helper.get_fallback_chain():
+            fallback_chain.append({
+                'model': fallback_model.model,
+                'provider': fallback_model.provider
+            })
+        
+        # Remove duplicates while preserving order
+        seen = set()
+        unique_chain = []
+        for item in fallback_chain:
+            key = f"{item['provider']}/{item['model']}"
+            if key not in seen:
+                seen.add(key)
+                unique_chain.append(item)
+        
+        return unique_chain
+
+    async def get_result_async(self, prompt: str, pydantic_model, llm_model_name: str = 'deepseek/deepseek-prover-v2:free', file: Optional[Union[str, Path]] = None, provider='open_router', tools: list = None, agent_config: Optional[dict] = None) -> Tuple[T, LLMReport] | Tuple[None, None]:
+        """Async version of get_result with fallback support"""
+        
+        if '/' not in llm_model_name:
+            raise ValueError(f"Model name '{llm_model_name}' must be in the format 'provider/model_name'.")
+
+        if tools is None:
+            tools = []
+
+        # Prepare user prompt with optional file attachment
+        if file:
+            file_path = Path(file)
+            if not file_path.exists():
+                raise FileNotFoundError(f"File not found: {file}")
+            
+            file_data = file_path.read_bytes()
+            media_type = mimetypes.guess_type(str(file_path))[0] or 'application/octet-stream'
+            
+            user_prompt = [
+                prompt,
+                BinaryContent(data=file_data, media_type=media_type)
+            ]
+        else:
+            user_prompt = prompt
+
+        return await self._execute_with_fallback_async(
+            user_prompt=user_prompt,
+            pydantic_model=pydantic_model,
+            primary_model=llm_model_name,
+            primary_provider=provider,
+            tools=tools,
+            agent_config=agent_config
+        )
+
+    async def _execute_with_fallback_async(self, user_prompt, pydantic_model, primary_model: str, primary_provider: str, tools: list, agent_config: Optional[dict] = None) -> Tuple[T, LLMReport]:
+        """Async version of execute request with fallback logic"""
+        
+        attempted_models = []
+        last_error = None
+        
+        # Build fallback chain
+        fallback_models = self._build_fallback_chain(primary_model, primary_provider, agent_config)
+        
+        for model_info in fallback_models:
+            try:
+                model_name, provider = model_info['model'], model_info['provider']
+                attempted_models.append(f"{provider}/{model_name}")
+                
+                llm_provider = self._get_llm_provider(provider, model_name)
+                agent = Agent(llm_provider, output_type=pydantic_model, instrument=True, tools=tools)
+                agent_output = await agent.run(user_prompt)
+                result = agent_output.output
+                
+                # Success! Update report with actual model used and fallback info
+                report = self._post_process(agent_output, f"{provider}/{model_name}", provider, pydantic_model.__name__)
+                report.attempted_models = attempted_models
+                report.fallback_used = len(attempted_models) > 1
+                
+                return result, report
+                
+            except Exception as e:
+                last_error = e
+                print(f"Model {model_info['model']} failed: {str(e)}")
+                continue
+        
+        # All models failed
+        raise Exception(f"All fallback models failed. Attempted: {attempted_models}. Last error: {str(last_error)}")
 
     """
     Usage data calculation. Save hooks for reporting.
@@ -85,7 +258,6 @@ class AiHelper:
             tool_names_called=self._extract_tool_names(agent_result)
         )
 
-        self.usage_tracker.add_usage(report, service=provider, model_name=model_name,pydantic_model_name=pydantic_model_name)
         return report
 
     def _extract_tool_names(self, agent_run_result: AgentRunResult) -> List[str]:
