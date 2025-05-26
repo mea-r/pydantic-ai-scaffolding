@@ -2,8 +2,11 @@
 Testing suite for the AIHelper class.
 """
 import argparse
+import asyncio
+
 from pydantic.v1.typing import get_args
 
+from agents.example_usage import main_agent_example
 from ai_helper import AiHelper
 from helpers.cli_helper_functions import flag_non_working_models, flag_file_capable_models
 from helpers.config_helper import ConfigHelper
@@ -18,11 +21,13 @@ parser.add_argument('--test_file_capability', nargs='*', help='Test file capabil
 parser.add_argument('--simple_test', nargs='*', help='Run a simple test case without tool calling')
 parser.add_argument('--test_tools', nargs='*', help='Run a test case with tool calling')
 parser.add_argument('--test_file', nargs='*', help='Run a test case with file analysis')
+parser.add_argument('--test_agent', nargs='*', help='Run a test case with agent functionality')
 parser.add_argument('--prices', nargs='*', help='Outputs price information for LLM models')
 parser.add_argument('--prices_save', nargs='*', help='Saves price information for LLM models')
 parser.add_argument('--custom', nargs='*', help='Run your custom code')
 parser.add_argument('--usage', nargs='*', help='Print the usage report')
 parser.add_argument('--usage_save', nargs='*', help='Save the sousage report')
+parser.add_argument('--test_fallback', nargs='*', help='Test fallback functionality with invalid model')
 args = parser.parse_args()
 
 if args.update_non_working is not None:
@@ -66,6 +71,9 @@ if args.test_file is not None:
         print(result.model_dump_json(indent=4))
         print(report.model_dump_json(indent=4))
 
+if args.test_agent is not None:
+    asyncio.run(main_agent_example())
+
 if args.usage is not None:
     usage_tracker = UsageTracker()
     summary = usage_tracker.get_usage_summary()
@@ -92,6 +100,29 @@ if args.prices_save is not None:
     file = 'llm_prices.txt'
     with open(file, 'w') as f:
         f.write(info_provider.format_price_list())
+
+if args.test_fallback is not None:
+    # Test fallback functionality
+    print("Testing fallback functionality...")
+    from py_models.hello_world.model import Hello_worldModel
+    
+    ai_helper = AiHelper()
+    
+    try:
+        result, report = ai_helper.get_result(
+            prompt='Say hello world!',
+            pydantic_model=Hello_worldModel,
+            llm_model_name='invalid/non-existent-model',
+            provider='invalid_provider'
+        )
+        print("✅ Fallback test successful!")
+        print(f"Final model used: {report.model_name}")
+        print(f"Fallback was used: {getattr(report, 'fallback_used', 'N/A')}")
+        print(f"Attempted models: {getattr(report, 'attempted_models', 'N/A')}")
+        print(f"Result: {result.model_dump_json(indent=2)}")
+        
+    except Exception as e:
+        print(f"❌ Fallback test failed: {str(e)}")
 
 if args.custom is not None:
     pass

@@ -38,7 +38,7 @@ class AgentBase:
     async def run(self, prompt: str, pydantic_model: Type[T],
                   model_name: Optional[str] = None, file_path: Optional[Union[str, Path]] = None,
                   provider: Optional[str] = None, **kwargs) -> T:
-        """Execute agent with given parameters"""
+        """Execute agent with given parameters and fallback support"""
 
         # Use config defaults if not specified
         model_name = model_name or self.config.get('default_model')
@@ -51,12 +51,22 @@ class AgentBase:
         else:
             full_prompt = prompt
 
+        # Prepare agent config for fallback support
+        agent_config = {}
+        if 'fallback_model' in self.config:
+            agent_config['fallback_model'] = self.config['fallback_model']
+        if 'fallback_provider' in self.config:
+            agent_config['fallback_provider'] = self.config['fallback_provider']
+        if 'fallback_chain' in self.config:
+            agent_config['fallback_chain'] = self.config['fallback_chain']
+
         result, report = await self.ai_helper.get_result_async(
             prompt=full_prompt,
             pydantic_model=pydantic_model,
             llm_model_name=model_name,
             file=file_path,
             provider=provider,
+            agent_config=agent_config if agent_config else None,
             **kwargs
         )
 

@@ -8,6 +8,13 @@ agents:
     description: "Extracts and analyzes content from various file types including PDFs, images, and documents"
     default_model: "google/gemini-2.5-pro-preview-03-25"
     default_provider: "google"
+    fallback_model: "openai/gpt-4o"
+    fallback_provider: "openai"
+    fallback_chain:
+      - model: "claude-3-5-sonnet"
+        provider: "anthropic"
+      - model: "gpt-4o-mini"
+        provider: "openai"
     capabilities:
       - file_reading
       - content_extraction
@@ -29,6 +36,13 @@ agents:
     description: "Improves text quality through grammar correction, style enhancement, and content organization"
     default_model: "openai/gpt-4o"
     default_provider: "openai"
+    fallback_model: "claude-3-5-sonnet"
+    fallback_provider: "anthropic"
+    fallback_chain:
+      - model: "gpt-4o-mini"
+        provider: "openai"
+      - model: "gemini-2.0-flash-001"
+        provider: "google"
     capabilities:
       - grammar_correction
       - style_improvement
@@ -50,6 +64,13 @@ agents:
     description: "Provides comprehensive editorial feedback and quality assessment"
     default_model: "anthropic/claude-3-5-sonnet-latest"
     default_provider: "anthropic"
+    fallback_model: "openai/gpt-4o"
+    fallback_provider: "openai"
+    fallback_chain:
+      - model: "claude-3-haiku"
+        provider: "anthropic"
+      - model: "gemini-2.5-flash-preview"
+        provider: "google"
     capabilities:
       - quality_assessment
       - editorial_feedback

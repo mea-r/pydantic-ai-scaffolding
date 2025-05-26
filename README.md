@@ -105,7 +105,10 @@ There are few useful command-line (`cli.py`) functionalities. Ensure your virtua
 
 ## Notes about manual implementation vs. LLMs
 
-In the end majority of this helper ended up being implemented by hand, with some LLM assistance.
+This project started as a real life experiment to new Opus 4 model. I provided the initial scaffolding and brief:
+**https://github.com/madviking/ai-helper/tree/start/initial-brief**
+
+And then tried to get llm's to implement based on the briefing and some followup prompting. If you are interested to see how something like this evolves in the hands of different LLM's, you can check out the branches below. I also did a manual implementation of the same functionality, which is available in the `feature/ai-helper-core` branch. This then later became the main branch.
 
 ### Initial brief shared by all LLMs
 
