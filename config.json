@@ -1,7 +1,9 @@
 {
-    "defaults": {
-        "model": "open_router:mistralai/mistral-7b-instruct:free",
-        "fallback_model": "open_router:openai/gpt-3.5-turbo",
+    "default_models": {
+        "primary": {
+            "model": "openai/gpt-4o-mini",
+            "provider": "open_router"
+        },
         "fallback_chain": [
             {
                 "model": "openai/gpt-4o-mini",

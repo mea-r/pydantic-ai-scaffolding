@@ -3,21 +3,20 @@ from os import path
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
 
-class FallbackModel(BaseModel):
+class LLMModel(BaseModel):
     model: str
     provider: str
 
 class Defaults(BaseModel):
-    model: str
-    fallback_model: Optional[str] = None
-    fallback_chain: List[FallbackModel] = Field(default_factory=list)
+    primary: LLMModel = Field(default_factory=lambda: LLMModel(model='gpt-4', provider='openai'))
+    fallback_chain: List[LLMModel] = Field(default_factory=list)
 
 class LimitConfig(BaseModel):
     per_model: Dict[str, int] = Field(default_factory=dict)
     per_service: Dict[str, int] = Field(default_factory=dict)
 
 class Config(BaseModel):
-    defaults: Defaults
+    default_models: Defaults
     daily_limits: LimitConfig
     monthly_limits: LimitConfig
     model_mappings: Dict[str, str] = Field(default_factory=dict)
@@ -60,11 +59,15 @@ class ConfigHelper:
 
     def get_fallback_model(self) -> Optional[str]:
         """Get the system-wide fallback model"""
-        return self.configuration.defaults.fallback_model
+        return self.configuration.default_models.primary.model
 
-    def get_fallback_chain(self) -> List[FallbackModel]:
+    def get_fallback_provider(self) -> Optional[str]:
+        """Get the system-wide fallback model"""
+        return self.configuration.default_models.primary.provider
+
+    def get_fallback_chain(self) -> List[LLMModel]:
         """Get the system-wide fallback chain"""
-        return self.configuration.defaults.fallback_chain
+        return self.configuration.default_models.fallback_chain
 
     def parse_model_string(self, model_string: str) -> tuple[str, str]:
         """Parse model string in format 'provider/model' or 'provider:model'"""
