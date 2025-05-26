@@ -43,7 +43,7 @@ def test_ai_helper_integration(provider, model):
          with pytest.raises(Exception, match=r"status_code: 404, model_name: errormodel"):
             ai_helper.get_result(prompt, pydantic_model, model, provider=provider)
     elif model == "deepseek/deepseek-prover-v2:free":
-         with pytest.raises(Exception, match=r"status_code: 404, model_name: deepseek/deepseek-prover-v2:free"):
+         with pytest.raises(ValueError, match=r"Unknown model: deepseek/deepseek-prover-v2:free"):
             ai_helper.get_result(prompt, pydantic_model, model, provider=provider)
     else:
         # Models expected to succeed

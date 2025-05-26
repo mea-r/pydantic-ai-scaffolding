@@ -1,0 +1,12 @@
+This is a sample document for testing the agent system.
+It contains some text that needs editing and improvement.
+
+The quick brown fox jumps over the lazy dog. This sentence have some grammar issues that should be fixed.
+Also, this document could benefit from better organization and structure.
+
+Some additional content to work with:
+- Point one
+- Point two  
+- Point three
+
+The end of the document.
