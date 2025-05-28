@@ -63,7 +63,57 @@ agents:
 
 ## Current Agents
 
-### TextEditorAgent (`src/agents/implementations/text_editor/`)
+### CV Processing Agents
+
+#### CVAnalysisAgent (`src/agents/implementations/cv_analysis/`)
+**Purpose**: Extracts structured data from CV documents with high accuracy
+
+**Capabilities**:
+- Document analysis and vision processing
+- Structured data extraction following CVData model
+- Skills categorization and experience parsing
+- Quality assessment of extraction
+
+**Default Model**: google/gemini-2.5-pro-preview (vision-capable)
+
+#### EmailIntegrationAgent (`src/agents/implementations/email_integration/`)
+**Purpose**: Integrates additional information from email communications with CV data
+
+**Capabilities**:
+- Email content extraction and analysis
+- CV data enhancement without overwriting
+- Conflict resolution between CV and email data
+- Context-aware information integration
+
+#### CVAnonymizationAgent (`src/agents/implementations/cv_anonymization/`)
+**Purpose**: Anonymizes personal information and enhances content quality
+
+**Capabilities**:
+- Complete personal information anonymization
+- Pronoun replacement (they/them/their)
+- Company name anonymization with systematic placeholders
+- Grammar and style improvements while preserving technical accuracy
+
+#### CVFormattingAgent (`src/agents/implementations/cv_formatting/`)
+**Purpose**: Applies proper HTML formatting to CV description fields
+
+**Capabilities**:
+- HTML formatting using allowed tags: `<p>`, `<br>`, `<ul>`, `<li>`, `<strong>`, `<em>`
+- Content structuring for improved readability
+- Semantic markup validation
+
+#### CVQualityAgent (`src/agents/implementations/cv_quality/`)
+**Purpose**: Validates CV processing quality and compliance
+
+**Capabilities**:
+- Comprehensive quality validation across multiple dimensions
+- Anonymization completeness verification (≥95% threshold)
+- HTML formatting compliance checking
+- Quality metrics generation and recommendations
+
+### General Purpose Agents
+
+#### TextEditorAgent (`src/agents/implementations/text_editor/`)
 **Purpose**: Improves text quality through grammar correction and style enhancement
 
 **Key Methods**:
@@ -76,21 +126,23 @@ agents:
 - `editing_rationale`: Explanation of changes
 - `confidence_score`: Quality assessment (0-1)
 
-### FileProcessorAgent (`src/agents/implementations/file_processor/`)
+#### FileProcessorAgent (`src/agents/implementations/file_processor/`)
 **Purpose**: Extracts and analyzes content from various file types
 
 **Capabilities**: 
 - File reading (PDF, images, documents)
 - Content extraction and summarization
 - Image analysis and description
+- Multi-modal content processing
 
-### FeedbackAgent (`src/agents/implementations/feedback/`)
+#### FeedbackAgent (`src/agents/implementations/feedback/`)
 **Purpose**: Provides editorial feedback and quality assessment
 
 **Capabilities**:
 - Comparative analysis of original vs edited content
 - Quality scoring and improvement suggestions
 - Objective editorial assessment
+- Multi-iteration feedback loops
 
 ## Agent Lifecycle
 
@@ -123,11 +175,13 @@ Agents work with structured outputs defined in `src/py_models/`:
 - Test case management
 
 ### With Workflows
-Agents can be orchestrated in multi-step workflows:
-- Sequential execution
-- Feedback loops
-- Quality thresholds
-- Iterative improvement
+Agents can be orchestrated in multi-step workflows defined in `workflows.yaml`:
+- **CV Processing Workflow**: Complete pipeline from analysis to quality validation
+- **Content Editing Workflow**: File processing, editing, and feedback loops
+- Sequential execution with fallback handling
+- Quality thresholds and validation requirements
+- Iterative improvement with max iteration limits
+- Comprehensive reporting and metrics
 
 ## Best Practices
 
@@ -145,8 +199,30 @@ Agents can be orchestrated in multi-step workflows:
 - **Caching**: Consider response caching for repeated operations
 - **Resource Management**: Monitor token usage and costs
 
+## Agent Command Line Usage
+
+### CV Processing
+```bash
+# Process CV with optional email integration
+python cli.py --process_cv <cv_file_path> [email_file_path]
+
+# Enable debug logging for detailed forensics
+python cli.py --vv --process_cv <cv_file_path>
+```
+
+### General Agent Testing
+```bash
+# Test agent functionality
+python cli.py --test_agent
+
+# Test with specific models
+python cli.py --test_tools all  # Test all models
+python cli.py --test_file all   # Test file processing with all models
+```
+
 ## See Also
 
-- [Creating New Agents](../agents/how-to-create-agents.md)
+- [Creating New Agents](how-to-create-agents.md)
 - [Models Documentation](../models/README.md)
 - [Tools Documentation](../tools/README.md)
+- [CV Processing Implementation](../../cv-implementation.md)
