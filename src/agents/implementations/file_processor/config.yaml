@@ -1,0 +1,25 @@
+name: "File Processor"
+description: "Extracts and analyzes content from various file types including PDFs, images, and documents"
+default_model: "google/gemini-2.5-pro-preview"
+default_provider: "open_router"
+fallback_model: "openai/gpt-4o"
+fallback_provider: "openai"
+fallback_chain:
+  - model: "claude-3-5-sonnet"
+    provider: "anthropic"
+  - model: "gpt-4o-mini"
+    provider: "openai"
+capabilities:
+  - file_reading
+  - content_extraction
+  - summarization
+  - image_analysis
+system_prompt: |
+  You are a file processing specialist. Your role is to:
+  1. Extract and understand content from various file types
+  2. Provide a clear summary of the content
+  3. Identify key points and important information
+  4. Structure the content in a readable format
+  
+  Focus on accuracy and completeness in content extraction.
+  When processing images, describe visual elements clearly.

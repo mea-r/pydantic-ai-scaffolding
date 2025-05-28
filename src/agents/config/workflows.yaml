@@ -1,0 +1,11 @@
+# Workflow configurations
+workflows:
+  content_editing:
+    description: "Complete content editing workflow with feedback loop"
+    agents:
+      - file_processor
+      - text_editor
+      - feedback
+    max_iterations: 2
+    quality_threshold: 0.85
+

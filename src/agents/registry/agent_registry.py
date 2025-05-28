@@ -15,14 +15,47 @@ class AgentRegistry:
         self._config = self._load_registry_config()
         
     def _load_registry_config(self) -> Dict:
-        """Load registry configuration"""
-        # Get the absolute path to the config file
+        """Load registry configuration from config files in implementation directories"""
         current_dir = Path(__file__).parent.parent
-        config_path = current_dir / "config" / "agents.yaml"
-        if config_path.exists():
-            with open(config_path, 'r') as f:
-                return yaml.safe_load(f)
-        return {"agents": {}}
+        agents_config = {}
+        
+        # Load from config.yaml files in each implementation directory
+        implementations_dir = current_dir / "implementations"
+        if implementations_dir.exists():
+            for agent_dir in implementations_dir.iterdir():
+                if agent_dir.is_dir() and not agent_dir.name.startswith('_'):
+                    config_file = agent_dir / "config.yaml"
+                    if config_file.exists():
+                        try:
+                            with open(config_file, 'r') as f:
+                                agent_config = yaml.safe_load(f)
+                                agents_config[agent_dir.name] = agent_config
+                        except Exception as e:
+                            print(f"Error loading agent config {config_file}: {e}")
+        
+        # Fallback to centralized config files for backwards compatibility
+        if not agents_config:
+            # Try centralized agents directory first
+            agents_dir = current_dir / "config" / "agents"
+            if agents_dir.exists():
+                for yaml_file in agents_dir.glob("*.yaml"):
+                    agent_name = yaml_file.stem
+                    try:
+                        with open(yaml_file, 'r') as f:
+                            agent_config = yaml.safe_load(f)
+                            agents_config[agent_name] = agent_config
+                    except Exception as e:
+                        print(f"Error loading agent config {yaml_file}: {e}")
+            
+            # Final fallback to monolithic config file
+            if not agents_config:
+                config_path = current_dir / "config" / "agents.yaml"
+                if config_path.exists():
+                    with open(config_path, 'r') as f:
+                        full_config = yaml.safe_load(f)
+                        agents_config = full_config.get("agents", {})
+        
+        return {"agents": agents_config}
     
     def register_agent(self, name: str, agent_class: Type[AgentBase]):
         """Register an agent class"""

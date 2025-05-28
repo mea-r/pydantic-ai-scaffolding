@@ -3,16 +3,20 @@ Testing suite for the AIHelper class.
 """
 import argparse
 import asyncio
-
-from pydantic.v1.typing import get_args
+import json
+import logging
+import os
+from datetime import datetime
+from pathlib import Path
 
 from agents.example_usage import main_agent_example
+from agents.process_cv import process_cv_command
 from ai_helper import AiHelper
 from helpers.cli_helper_functions import flag_non_working_models, flag_file_capable_models
-from helpers.config_helper import ConfigHelper
 from helpers.llm_info_provider import LLMInfoProvider
 from helpers.usage_tracker import UsageTracker, format_usage_data
 from helpers.test_helpers_utils import test_hello_world, test_weather, test_file_analysis
+
 
 # check command line flags
 parser = argparse.ArgumentParser()
@@ -28,7 +32,41 @@ parser.add_argument('--custom', nargs='*', help='Run your custom code')
 parser.add_argument('--usage', nargs='*', help='Print the usage report')
 parser.add_argument('--usage_save', nargs='*', help='Save the sousage report')
 parser.add_argument('--test_fallback', nargs='*', help='Test fallback functionality with invalid model')
+parser.add_argument('--process_cv', nargs='*', help='Process CV with agentic workflow. Usage: --process_cv <cv_file_path> [email_file_path]')
+parser.add_argument('--vv', action='store_true', help='Enable verbose debug logging to logs/forensics.log')
 args = parser.parse_args()
+
+# Setup forensics logging if --vv flag is present
+if args.vv:
+    # Ensure logs directory exists
+    logs_dir = Path("logs")
+    logs_dir.mkdir(exist_ok=True)
+    
+    # Setup forensics logger
+    forensics_logger = logging.getLogger('forensics')
+    forensics_logger.setLevel(logging.DEBUG)
+    
+    # Create file handler
+    forensics_handler = logging.FileHandler('logs/forensics.log')
+    forensics_handler.setLevel(logging.DEBUG)
+    
+    # Create formatter
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    forensics_handler.setFormatter(formatter)
+    
+    # Add handler to logger
+    forensics_logger.addHandler(forensics_handler)
+    
+    # Also setup console handler for immediate feedback
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    console_handler.setFormatter(formatter)
+    forensics_logger.addHandler(console_handler)
+    
+    forensics_logger.info("Forensics logging enabled - detailed debug information will be logged to logs/forensics.log")
+    
+    # Set debug flag globally for agents
+    os.environ['AI_HELPER_DEBUG'] = 'true'
 
 if args.update_non_working is not None:
     # if the flag is set, we will update the non-working models in the config file
@@ -42,7 +80,7 @@ if args.test_file_capability is not None:
 
 if args.simple_test is not None:
     ## test case with tool calling
-    result, report = test_hello_world()
+    result, report = test_hello_world(model_name='google/gemini-2.5-pro-preview')
     print(result.model_dump_json(indent=4))
     print(report.model_dump_json(indent=4))
 

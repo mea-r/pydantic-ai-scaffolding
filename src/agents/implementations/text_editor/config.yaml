@@ -1,0 +1,25 @@
+name: "Text Editor"
+description: "Improves text quality through grammar correction, style enhancement, and content organization"
+default_model: "openai/gpt-4o"
+default_provider: "open_router"
+fallback_model: "claude-3-5-sonnet"
+fallback_provider: "anthropic"
+fallback_chain:
+  - model: "gpt-4o-mini"
+    provider: "openai"
+  - model: "gemini-2.0-flash-001"
+    provider: "google"
+capabilities:
+  - grammar_correction
+  - style_improvement
+  - content_organization
+  - readability_enhancement
+system_prompt: |
+  You are a professional text editor with expertise in:
+  - Grammar and syntax correction
+  - Style and clarity improvement
+  - Content organization and flow
+  - Readability enhancement
+  
+  Your goal is to improve text while preserving the original meaning and intent.
+  Be conservative with changes unless improvement is clear and beneficial.

@@ -2,11 +2,16 @@ from typing import Any, Optional, Union, TypeVar, Tuple, List
 from datetime import datetime
 import uuid
 import mimetypes
+import logging
+import os
+import time
+import traceback
 from pathlib import Path
 
 from pydantic_ai import Agent
 from pydantic_ai.agent import AgentRunResult
 from pydantic_ai.messages import ModelResponse, ToolCallPart, BinaryContent
+from pydantic_ai import capture_run_messages, UnexpectedModelBehavior
 from pydantic_ai.models.openai import OpenAIModel
 from pydantic_ai.models.anthropic import AnthropicModel
 from pydantic_ai.models.google import GoogleModel
@@ -39,6 +44,13 @@ class AiHelper:
             'google': (GoogleModel, GoogleProvider, 'GOOGLE_API_KEY'),
             'open_router': (OpenAIModel, OpenRouterProvider, 'OPEN_ROUTER_API_KEY')
         }
+        
+        # Setup debug logging
+        self.debug_enabled = os.getenv('AI_HELPER_DEBUG', 'false').lower() == 'true'
+        if self.debug_enabled:
+            self.logger = logging.getLogger('forensics')
+        else:
+            self.logger = None
 
     """
     This is the main sync method we use
@@ -86,53 +98,173 @@ class AiHelper:
 
     def _execute_with_fallback(self, user_prompt, pydantic_model, fallback_models, tools):
         attempted_models, last_error = [], None
+        
+        if self.logger:
+            self.logger.info(f"Starting execution with {len(fallback_models)} models in fallback chain")
+            self.logger.debug(f"Fallback models: {fallback_models}")
+            self.logger.debug(f"Output model: {pydantic_model.__name__}")
+            self.logger.debug(f"Tools provided: {[tool.__name__ if hasattr(tool, '__name__') else str(tool) for tool in tools]}")
 
-        for model_info in fallback_models:
-
+        for idx, model_info in enumerate(fallback_models):
+            model_start_time = time.time()
             try:
                 model_name, provider = model_info['model'], model_info['provider']
-                attempted_models.append(f"{provider}/{model_name}")
+                full_model_name = f"{provider}/{model_name}"
+                attempted_models.append(full_model_name)
+                
+                if self.logger:
+                    self.logger.info(f"Attempting model {idx+1}/{len(fallback_models)}: {full_model_name}")
 
                 llm_provider = self._get_llm_provider(provider, model_name)
                 agent = Agent(llm_provider, output_type=pydantic_model, instrument=True, tools=tools)
-                agent_output = agent.run_sync(user_prompt)
+                
+                if self.logger:
+                    self.logger.debug(f"Agent created successfully for {full_model_name}")
+                    self.logger.debug(f"Running synchronous request...")
+                
+                # Use capture_run_messages for detailed forensics
+                with capture_run_messages() as messages:
+                    try:
+                        agent_output = agent.run_sync(user_prompt)
+                        
+                        model_duration = time.time() - model_start_time
+                        if self.logger:
+                            self.logger.info(f"Model {full_model_name} succeeded in {model_duration:.2f}s")
+                            self.logger.debug(f"Usage: {agent_output.usage()}")
+                            # Log successful message exchange for debug purposes
+                            self.logger.debug(f"Successful message exchange had {len(messages)} messages")
+                            for i, message in enumerate(messages):
+                                self.logger.debug(f"Success Message {i+1}: {type(message).__name__}")
+                            
+                    except UnexpectedModelBehavior as e:
+                        model_duration = time.time() - model_start_time
+                        if self.logger:
+                            self.logger.error(f"UnexpectedModelBehavior for {full_model_name} after {model_duration:.2f}s: {e}")
+                            self.logger.error(f"Cause: {repr(e.__cause__)}")
+                            self.logger.error("=== FULL MESSAGE EXCHANGE ===")
+                            for i, message in enumerate(messages):
+                                self.logger.error(f"Message {i+1}: {message}")
+                            self.logger.error("=== END MESSAGE EXCHANGE ===")
+                        raise e
+                    except Exception as e:
+                        # Capture message exchange for any other exceptions too
+                        model_duration = time.time() - model_start_time
+                        if self.logger:
+                            self.logger.error(f"Exception in {full_model_name} after {model_duration:.2f}s: {e}")
+                            if messages:
+                                self.logger.error("=== MESSAGE EXCHANGE ON EXCEPTION ===")
+                                for i, message in enumerate(messages):
+                                    self.logger.error(f"Exception Message {i+1}: {message}")
+                                self.logger.error("=== END MESSAGE EXCHANGE ===")
+                        raise e
 
-                report = self._post_process(agent_output, f"{provider}/{model_name}", provider, pydantic_model.__name__)
+                report = self._post_process(agent_output, full_model_name, provider, pydantic_model.__name__)
                 report.attempted_models = attempted_models
                 report.fallback_used = len(attempted_models) > 1
 
                 return agent_output.output, report
 
             except Exception as e:
+                model_duration = time.time() - model_start_time
                 last_error = e
-                print(f"Model {model_info['model']} failed: {str(e)}")
+                error_msg = f"Model {model_info['model']} failed after {model_duration:.2f}s: {str(e)}"
+                print(error_msg)
+                
+                if self.logger:
+                    self.logger.warning(error_msg)
+                    self.logger.debug(f"Full traceback for {model_info['model']}: {traceback.format_exc()}")
+                
                 continue
 
-        raise Exception(f"All fallback models failed. Attempted: {attempted_models}. Last error: {str(last_error)}")
+        final_error = f"All fallback models failed. Attempted: {attempted_models}. Last error: {str(last_error)}"
+        if self.logger:
+            self.logger.error(final_error)
+        raise Exception(final_error)
 
     async def _execute_with_fallback_async(self, user_prompt, pydantic_model, fallback_models, tools):
         attempted_models, last_error = [], None
+        
+        if self.logger:
+            self.logger.info(f"Starting async execution with {len(fallback_models)} models in fallback chain")
+            self.logger.debug(f"Fallback models: {fallback_models}")
+            self.logger.debug(f"Output model: {pydantic_model.__name__}")
+            self.logger.debug(f"Tools provided: {[tool.__name__ if hasattr(tool, '__name__') else str(tool) for tool in tools]}")
 
-        for model_info in fallback_models:
+        for idx, model_info in enumerate(fallback_models):
+            model_start_time = time.time()
             try:
                 model_name, provider = model_info['model'], model_info['provider']
-                attempted_models.append(f"{provider}/{model_name}")
+                full_model_name = f"{provider}/{model_name}"
+                attempted_models.append(full_model_name)
+                
+                if self.logger:
+                    self.logger.info(f"Attempting async model {idx+1}/{len(fallback_models)}: {full_model_name}")
+                
                 llm_provider = self._get_llm_provider(provider, model_name)
                 agent = Agent(llm_provider, output_type=pydantic_model, instrument=True, tools=tools)
-                agent_output = await agent.run(user_prompt)
+                
+                if self.logger:
+                    self.logger.debug(f"Async agent created successfully for {full_model_name}")
+                    self.logger.debug(f"Running asynchronous request...")
+                
+                # Use capture_run_messages for detailed forensics
+                with capture_run_messages() as messages:
+                    try:
+                        agent_output = await agent.run(user_prompt)
+                        
+                        model_duration = time.time() - model_start_time
+                        if self.logger:
+                            self.logger.info(f"Async model {full_model_name} succeeded in {model_duration:.2f}s")
+                            self.logger.debug(f"Usage: {agent_output.usage()}")
+                            # Log successful message exchange for debug purposes
+                            self.logger.debug(f"Successful async message exchange had {len(messages)} messages")
+                            for i, message in enumerate(messages):
+                                self.logger.debug(f"Async Success Message {i+1}: {type(message).__name__}")
+                            
+                    except UnexpectedModelBehavior as e:
+                        model_duration = time.time() - model_start_time
+                        if self.logger:
+                            self.logger.error(f"UnexpectedModelBehavior for {full_model_name} after {model_duration:.2f}s: {e}")
+                            self.logger.error(f"Cause: {repr(e.__cause__)}")
+                            self.logger.error("=== FULL ASYNC MESSAGE EXCHANGE ===")
+                            for i, message in enumerate(messages):
+                                self.logger.error(f"Async Message {i+1}: {message}")
+                            self.logger.error("=== END ASYNC MESSAGE EXCHANGE ===")
+                        raise e
+                    except Exception as e:
+                        # Capture message exchange for any other exceptions too
+                        model_duration = time.time() - model_start_time
+                        if self.logger:
+                            self.logger.error(f"Async exception in {full_model_name} after {model_duration:.2f}s: {e}")
+                            if messages:
+                                self.logger.error("=== ASYNC MESSAGE EXCHANGE ON EXCEPTION ===")
+                                for i, message in enumerate(messages):
+                                    self.logger.error(f"Async Exception Message {i+1}: {message}")
+                                self.logger.error("=== END ASYNC MESSAGE EXCHANGE ===")
+                        raise e
 
-                report = self._post_process(agent_output, f"{provider}/{model_name}", provider, pydantic_model.__name__)
+                report = self._post_process(agent_output, full_model_name, provider, pydantic_model.__name__)
                 report.attempted_models = attempted_models
                 report.fallback_used = len(attempted_models) > 1
 
                 return agent_output.output, report
 
             except Exception as e:
+                model_duration = time.time() - model_start_time
                 last_error = e
-                print(f"Model {model_info['model']} failed: {str(e)}")
+                error_msg = f"Async model {model_info['model']} failed after {model_duration:.2f}s: {str(e)}"
+                print(error_msg)
+                
+                if self.logger:
+                    self.logger.warning(error_msg)
+                    self.logger.debug(f"Full async traceback for {model_info['model']}: {traceback.format_exc()}")
+                
                 continue
 
-        raise Exception(f"All fallback models failed. Attempted: {attempted_models}. Last error: {str(last_error)}")
+        final_error = f"All async fallback models failed. Attempted: {attempted_models}. Last error: {str(last_error)}"
+        if self.logger:
+            self.logger.error(final_error)
+        raise Exception(final_error)
 
     def _build_fallback_chain(self, primary_model: str, primary_provider: str, agent_config: dict = None) -> List[dict]:
         # Handle primary model - keep full format for open_router, strip for others

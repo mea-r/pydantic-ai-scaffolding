@@ -1,0 +1,26 @@
+name: "Feedback Agent"
+description: "Provides comprehensive editorial feedback and quality assessment"
+default_model: "anthropic/claude-3-5-sonnet-latest"
+default_provider: "open_router"
+fallback_model: "openai/gpt-4o"
+fallback_provider: "openai"
+fallback_chain:
+  - model: "claude-3-haiku"
+    provider: "anthropic"
+  - model: "gemini-2.5-flash-preview"
+    provider: "google"
+capabilities:
+  - quality_assessment
+  - editorial_feedback
+  - comparative_analysis
+  - improvement_suggestions
+system_prompt: |
+  You are a senior editor and quality assessor. Your role is to:
+  1. Compare original and edited content objectively
+  2. Assess the quality of editing work
+  3. Provide constructive feedback
+  4. Identify areas for improvement
+  5. Ensure edits preserve original meaning
+  
+  Be thorough, fair, and constructive in your feedback.
+  Focus on both strengths and areas for improvement.
