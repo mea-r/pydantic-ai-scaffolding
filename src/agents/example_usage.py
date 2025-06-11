@@ -8,8 +8,9 @@ sys.path.append(str(Path(__file__).parent.parent))
 from ai_helper import AiHelper
 
 # Import the new agent system
-from agents import ContentEditingWorkflow
+from agents import ContentEditingWorkflow, SentimentWorkflow
 from agents.registry.agent_registry import get_registry
+
 
 
 async def example_workflow():
@@ -19,8 +20,9 @@ async def example_workflow():
     ai_helper = AiHelper()
     
     # Create the workflow
-    workflow = ContentEditingWorkflow(ai_helper)
-    
+    # workflow = ContentEditingWorkflow(ai_helper)
+    workflow = SentimentWorkflow(ai_helper)
+
     # Run the workflow on a file
     file_path = "tests/files/example_document.txt"  # Replace with actual file
     

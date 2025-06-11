@@ -26,4 +26,3 @@ class FileAnalysisModel(BasePyModel):
     text_content: str = Field(..., description="The full text content extracted from the file")
     key: str = Field(..., description="There is a key inside that you are supposed to find")
     value: str = Field(..., description="There is a value inside that you are supposed to find")
-3.

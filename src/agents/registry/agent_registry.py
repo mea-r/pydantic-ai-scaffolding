@@ -60,6 +60,7 @@ class AgentRegistry:
     def register_agent(self, name: str, agent_class: Type[AgentBase]):
         """Register an agent class"""
         self._agents[name] = agent_class
+
         
     def get_agent_class(self, name: str) -> Optional[Type[AgentBase]]:
         """Get agent class by name"""

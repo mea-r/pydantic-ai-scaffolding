@@ -1,14 +1,9 @@
 name: "File Processor"
-description: "Extracts and analyzes content from various file types including PDFs, images, and documents"
-default_model: "google/gemini-2.5-pro-preview"
-default_provider: "open_router"
-fallback_model: "openai/gpt-4o"
-fallback_provider: "openai"
+description: "Extracts and analyzes content from various file types including PDFs, images, and documents."
+default_model: "google/gemini-1.5-flash-latest"
 fallback_chain:
-  - model: "claude-3-5-sonnet"
-    provider: "anthropic"
-  - model: "gpt-4o-mini"
-    provider: "openai"
+  - "openai/gpt-4o"
+  - "anthropic/claude-3.5-sonnet-latest"
 capabilities:
   - file_reading
   - content_extraction

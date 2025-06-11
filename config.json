@@ -176,7 +176,12 @@
         "openai/gpt-4o:extended",
         "mistralai/mistral-tiny",
         "mistralai/mistral-small",
-        "openai/gpt-3.5-turbo-16k"
+        "openai/gpt-3.5-turbo-16k",
+        "meta-llama/llama-4-maverick",
+        "meta-llama/llama-4-scout",
+        "deepseek/deepseek-chat-v3-0324:free",
+        "google/gemini-flash-1.5-8b",
+        "openai/gpt-4o-mini"
     ],
     "mode": "strict"
 }

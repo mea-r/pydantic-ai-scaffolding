@@ -67,23 +67,22 @@ class AiHelper:
 
         return self._execute_with_fallback(user_prompt, pydantic_model, fallback_models, tools)
 
-    """
-    Async version is used by agent graphs
-    """
     async def get_result_async(self, prompt: str, pydantic_model,
-                               llm_model_name: str = 'deepseek/deepseek-prover-v2:free',
-                               file: Optional[Union[str, Path]] = None, provider='open_router', tools: list = None,
+                               llm_model_name: str,
+                               file: Optional[Union[str, Path]] = None, tools: list = None,
                                agent_config: Optional[dict] = None) -> Tuple[T, LLMReport] | Tuple[None, None]:
+
         if '/' not in llm_model_name:
             raise ValueError(f"Model name '{llm_model_name}' must be in the format 'provider/model_name'.")
 
         tools = tools or []
         user_prompt = self._prepare_prompt(prompt, file)
-        fallback_models = self._build_fallback_chain(llm_model_name, provider, agent_config)
+
+        fallback_models = self._build_fallback_chain(llm_model_name, agent_config)
 
         return await self._execute_with_fallback_async(user_prompt, pydantic_model, fallback_models, tools)
 
-    def _prepare_prompt(self, prompt: str, file):
+    def _prepare_prompt(self, prompt: str, file: Optional[Union[str, Path]]) -> Union[str, List[Any]]:
         if not file:
             return prompt
 
@@ -91,10 +90,20 @@ class AiHelper:
         if not file_path.exists():
             raise FileNotFoundError(f"File not found: {file}")
 
-        return [prompt, BinaryContent(
-            data=file_path.read_bytes(),
-            media_type=mimetypes.guess_type(str(file_path))[0] or 'application/octet-stream'
-        )]
+        media_type, _ = mimetypes.guess_type(str(file_path))
+
+        if media_type and media_type.startswith('text/'):
+            try:
+                text_content = file_path.read_text(encoding='utf-8')
+                return f"{prompt}\n\n--- FILE CONTENT ---\n{text_content}"
+            except Exception as e:
+                raise IOError(f"Failed to read text file {file_path}: {e}")
+
+        else:
+            return [prompt, BinaryContent(
+                data=file_path.read_bytes(),
+                media_type=media_type or 'application/octet-stream'
+            )]
 
     def _execute_with_fallback(self, user_prompt, pydantic_model, fallback_models, tools):
         attempted_models, last_error = [], None
@@ -266,29 +275,17 @@ class AiHelper:
             self.logger.error(final_error)
         raise Exception(final_error)
 
-    def _build_fallback_chain(self, primary_model: str, primary_provider: str, agent_config: dict = None) -> List[dict]:
-        # Handle primary model - keep full format for open_router, strip for others
-        primary_model_name = primary_model.split('/', 1)[-1] if primary_provider != 'open_router' else primary_model
+    def _build_fallback_chain(self, primary_model_identifier: str, agent_config: dict = None) -> List[dict]:
+        primary_provider, primary_model_name = primary_model_identifier.split('/', 1)
+
         fallback_chain = [{'model': primary_model_name, 'provider': primary_provider}]
 
-        # Add agent-specific fallbacks
         if agent_config:
-            if 'fallback_model' in agent_config and 'fallback_provider' in agent_config:
-                fallback_model = agent_config['fallback_model']
-                # Strip provider prefix if present, except for open_router
-                if '/' in fallback_model and agent_config['fallback_provider'] != 'open_router':
-                    fallback_model = fallback_model.split('/', 1)[-1]
-                fallback_chain.append(
-                    {'model': fallback_model, 'provider': agent_config['fallback_provider']})
+            for fallback_str in agent_config.get('fallback_chain', []):
+                if isinstance(fallback_str, str) and '/' in fallback_str:
+                    provider, model = fallback_str.split('/', 1)
+                    fallback_chain.append({'model': model, 'provider': provider})
 
-            for fallback in agent_config.get('fallback_chain', []):
-                model = fallback['model']
-                # Strip provider prefix if present, except for open_router
-                if '/' in model and fallback['provider'] != 'open_router':
-                    model = model.split('/', 1)[-1]
-                fallback_chain.append({'model': model, 'provider': fallback['provider']})
-
-        # Add system fallbacks
         try:
             model = self.config_helper.get_fallback_model()
             provider = self.config_helper.get_fallback_provider()
@@ -299,12 +296,16 @@ class AiHelper:
         except Exception as e:
             print(f"Error loading system fallbacks: {e}")
 
-        # Remove duplicates
         seen, unique_chain = set(), []
         for item in fallback_chain:
-            key = f"{item['provider']}/{item['model']}"
-            if key not in seen:
-                seen.add(key)
+            key_provider = item['provider']
+            key_model = item['model']
+            if key_provider == 'open_router' and not key_model.startswith(item.get('provider_or_other_prefix', '')):
+                pass
+
+            full_key = f"{key_provider}/{key_model}"
+            if full_key not in seen:
+                seen.add(full_key)
                 unique_chain.append(item)
 
         return unique_chain

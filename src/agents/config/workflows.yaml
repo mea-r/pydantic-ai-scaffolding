@@ -9,3 +9,12 @@ workflows:
     max_iterations: 2
     quality_threshold: 0.85
 
+  sentiment_aware_editing:
+    description: "Runs the content editing workflow and then analyzes the sentiment of the final result."
+    agents:
+      - file_processor
+      - text_editor
+      - feedback
+      - sentiment
+    max_iterations: 2
+    quality_threshold: 0.85

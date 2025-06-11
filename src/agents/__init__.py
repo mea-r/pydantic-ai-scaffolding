@@ -7,7 +7,7 @@ from .implementations import (
     TextEditorAgent, EditedContent,
     FeedbackAgent, EditingFeedback
 )
-from .workflows import BaseWorkflow, ContentEditingWorkflow
+from .workflows import BaseWorkflow, ContentEditingWorkflow, SentimentWorkflow
 
 # Agents are auto-discovered when registry is first accessed
 

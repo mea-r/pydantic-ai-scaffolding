@@ -10,12 +10,11 @@ from datetime import datetime
 from pathlib import Path
 
 from agents.example_usage import main_agent_example
-from agents.process_cv import process_cv_command
 from ai_helper import AiHelper
 from helpers.cli_helper_functions import flag_non_working_models, flag_file_capable_models
 from helpers.llm_info_provider import LLMInfoProvider
 from helpers.usage_tracker import UsageTracker, format_usage_data
-from helpers.test_helpers_utils import test_hello_world, test_weather, test_file_analysis
+from helpers.test_helpers_utils import test_hello_world, test_weather, test_file_analysis, test_inspiration
 
 
 # check command line flags

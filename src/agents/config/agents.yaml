@@ -87,6 +87,22 @@ agents:
       Be thorough, fair, and constructive in your feedback.
       Focus on both strengths and areas for improvement.
 
+  sentiment_agent:
+    name: "Sentiment Agent"
+    description: "Analyzes text to determine its sentiment (Positive, Negative, Neutral)."
+    default_model: "google/gemini-1.5-flash-latest"
+    fallback_chain:
+      - "anthropic/claude-3-haiku-latest"
+      - "openai/gpt-3.5-turbo"
+    capabilities:
+      - sentiment_analysis
+      - emotional_tone_detection
+      - text_classification
+    system_prompt: |
+      You are an expert sentiment analyst. Analyze the provided text and classify its overall sentiment as Positive, Negative, or Neutral.
+      Provide a confidence score for your classification and a brief justification.
+      Respond only in the required JSON format.
+
 # Workflow configurations can be added here too
 workflows:
   content_editing:
@@ -97,3 +113,14 @@ workflows:
       - feedback
     max_iterations: 2
     quality_threshold: 0.85
+
+  sentiment_editing:
+    description: "Runs the content editing workflow and then analyzes the sentiment of the final result."
+    agents:
+      - file_processor
+      - text_editor
+      - feedback
+      - sentiment_agent
+    max_iterations: 2
+    quality_threshold: 0.85
+

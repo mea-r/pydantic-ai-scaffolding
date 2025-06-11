@@ -1,0 +1,15 @@
+name: "Sentiment Agent"
+description: "Analyzes text to determine its sentiment (Positive, Negative, Neutral)."
+default_model: "google/gemini-1.5-flash-latest"
+
+fallback_chain:
+  - "anthropic/claude-3-haiku-latest"
+  - "openai/gpt-3.5-turbo"
+
+capabilities:
+  - sentiment_analysis
+  - emotional_tone_detection
+  - text_classification
+system_prompt: |
+  You are an expert sentiment analyst. Your role is to accurately classify text based on its emotional tone and content.
+  You must be objective and base your analysis strictly on the text provided.

@@ -1,14 +1,9 @@
 name: "Feedback Agent"
-description: "Provides comprehensive editorial feedback and quality assessment"
-default_model: "anthropic/claude-3-5-sonnet-latest"
-default_provider: "open_router"
-fallback_model: "openai/gpt-4o"
-fallback_provider: "openai"
+description: "Provides comprehensive editorial feedback and quality assessment by comparing two texts."
+default_model: "anthropic/claude-3-5-sonnet-20240620"
 fallback_chain:
-  - model: "claude-3-haiku"
-    provider: "anthropic"
-  - model: "gemini-2.5-flash-preview"
-    provider: "google"
+  - "openai/gpt-4o"
+  - "anthropic/claude-3-haiku-20240307"
 capabilities:
   - quality_assessment
   - editorial_feedback

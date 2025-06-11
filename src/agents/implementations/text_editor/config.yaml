@@ -1,14 +1,9 @@
 name: "Text Editor"
-description: "Improves text quality through grammar correction, style enhancement, and content organization"
+description: "Improves text quality through grammar correction, style enhancement, and content organization."
 default_model: "openai/gpt-4o"
-default_provider: "open_router"
-fallback_model: "claude-3-5-sonnet"
-fallback_provider: "anthropic"
 fallback_chain:
-  - model: "gpt-4o-mini"
-    provider: "openai"
-  - model: "gemini-2.0-flash-001"
-    provider: "google"
+  - "anthropic/claude-3.5-sonnet-latest"
+  - "google/gemini-1.5-pro-latest"
 capabilities:
   - grammar_correction
   - style_improvement
